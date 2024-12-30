@@ -1,19 +1,20 @@
 package socket
 
 import (
+	"TheCave/game"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"the-spot/game"
 	"time"
 
 	"github.com/zishang520/engine.io/types"
 	"github.com/zishang520/socket.io/socket"
 )
 
-var ClientCharIDMap = make(map[string]string)
-
 var opt = &socket.ServerOptions{}
+
+type Socket struct {
+}
 
 func (s *Socket) GetServerOptions() *socket.ServerOptions {
 	o := socket.DefaultServerOptions()
@@ -80,7 +81,7 @@ func (s *Socket) Router() http.Handler {
 					fmt.Println("player:join -- unable to unmarshal msg to struct")
 					panic(0)
 				}
-				ClientCharIDMap[string(client.Id())] = char.Id
+				Session[string(client.Id())] = char.Id
 				game.AddCharacter(char)
 				client.Broadcast().Emit("room:player:join", char)
 			}
@@ -94,7 +95,7 @@ func (s *Socket) Router() http.Handler {
 
 		client.On("disconnect", func(msgs ...any) {
 			fmt.Println("disconnect")
-			id := ClientCharIDMap[string(client.Id())]
+			id := Session[string(client.Id())]
 			if len(id) > 0 {
 				game.RemoveCharacter(id)
 				client.Broadcast().Emit("room:player:leave", id)
@@ -104,29 +105,48 @@ func (s *Socket) Router() http.Handler {
 
 		client.On("player:move", func(msgs ...any) {
 			fmt.Println("player:move")
-			id := ClientCharIDMap[string(client.Id())]
+			id := Session[string(client.Id())]
 
 			if len(id) > 0 {
-				data, ok := msgs[0].([]interface{})
 
-				if !ok {
-					fmt.Println("player:move -- cant cast find position in move")
+				jsonData, err := s.GetJsonFromSocketMsg(msgs[0])
+
+				if err != nil {
+					fmt.Println("player:move -- unable to get json from msg")
 					panic(0)
 				}
 
-				var pos = &game.Position{}
+				input := &PlayerMoveInput{}
 
-				for i := 0; i < 3; i++ {
-					point, ok := data[i].(float64)
-					if !ok {
-						fmt.Println("player:move -- cant cast interface to float64 in position in move")
-						panic(0)
-					}
-					pos[i] = point
+				err = json.Unmarshal(jsonData, input)
+				if err != nil {
+					fmt.Println("player:move -- unable to unmarshal msg to struct")
+					panic(0)
 				}
 
-				game.Characters[id].Position = *pos
-				client.Broadcast().Emit("room:player:move", &RoomPlayerMoveBroadcast{Id: game.Characters[id].Id, Position: game.Characters[id].Position})
+				// data, ok := msgs[0].([]interface{})
+
+				// if !ok {
+				// 	fmt.Println("player:move -- cant cast find position in move")
+				// 	panic(0)
+				// }
+
+				// var pos = &game.Position{}
+
+				// for i := 0; i < 3; i++ {
+				// 	point, ok := data[i].(float64)
+				// 	if !ok {
+				// 		fmt.Println("player:move -- cant cast interface to float64 in position in move")
+				// 		panic(0)
+				// 	}
+				// 	pos[i] = point
+				// }
+
+				game.Characters[id].Position = input.Position
+				game.Characters[id].Anim = input.Anim
+				game.Characters[id].Rotate = input.Rotate
+
+				client.Broadcast().Emit("room:player:move", &PlayerMoveBroadcast{Id: game.Characters[id].Id, Position: game.Characters[id].Position})
 			}
 
 		})

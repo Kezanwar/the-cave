@@ -1,13 +1,13 @@
 package main
 
 import (
+	"TheCave/api"
+	"TheCave/socket"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"the-spot/api"
-	"the-spot/socket"
 
 	"github.com/gorilla/mux"
 )

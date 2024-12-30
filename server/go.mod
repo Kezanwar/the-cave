@@ -1,4 +1,4 @@
-module the-spot
+module TheCave
 
 go 1.23.1
 

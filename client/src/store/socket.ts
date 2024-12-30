@@ -1,13 +1,15 @@
 import { makeObservable } from 'mobx';
 import { io } from 'socket.io-client';
 import { RootStore } from '@app/store/index';
-import { Character, initCharacters } from './game';
+import { Character, initCharacters, Position } from './game';
+import { positionLocal } from 'three/tsl';
+import { CommonAnimationNames } from '@app/animations';
 
 const socket = io('http://localhost:3000');
 
 type MoveCharacterBroadcast = {
   id: string;
-  position: number[];
+  position: Position;
 };
 
 class SocketStore {
@@ -44,8 +46,12 @@ class SocketStore {
     socket.emit('player:join', char);
   }
 
-  emitPlayerMove(pos: number[]) {
-    socket.emit('player:move', pos);
+  emitPlayerMove(
+    position: Position,
+    rotate: number,
+    anim: CommonAnimationNames
+  ) {
+    socket.emit('player:move', { position, rotate, anim });
   }
 
   emitGameReinitialize = () => {

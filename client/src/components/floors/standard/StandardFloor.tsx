@@ -22,7 +22,7 @@ const StandardFloor: FC = observer(() => {
   return (
     // <RigidBody colliders={'hull'}>
     <mesh
-      onClick={(e) => store.player.moveTo([e.point.x, 0, e.point.z])}
+      // onClick={(e) => store.player.moveTo([e.point.x, 0, e.point.z])}
       onPointerEnter={() => store.player.setMouseOnFloor(true)}
       onPointerLeave={() => store.player.setMouseOnFloor(false)}
       position={pos}

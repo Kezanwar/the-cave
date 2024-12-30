@@ -1,13 +1,17 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 import { RootStore } from '@app/store/index';
-import { Vector3 } from '@react-three/fiber';
+import { CommonAnimationNames } from '@app/animations';
+
+export type Position = [number, number, number];
 
 export type Character = {
   id: string;
   hairColor: string;
   topColor: string;
   bottomColor: string;
-  position: number[];
+  position: [number, number, number];
+  rotate: number;
+  anim: CommonAnimationNames;
 };
 
 export type initCharacters = {
@@ -52,7 +56,7 @@ class GameStore {
     this.characters.delete(id);
   }
 
-  moveCharacter(id: string, position: number[]) {
+  moveCharacter(id: string, position: Position) {
     const c = this.characters.get(id);
     if (c) {
       c.position = position;

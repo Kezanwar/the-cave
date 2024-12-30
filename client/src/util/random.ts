@@ -1,3 +1,4 @@
+import { Position } from '@app/store/game';
 import { Vector3 } from '@react-three/fiber';
 import { v4 } from 'uuid';
 
@@ -6,7 +7,7 @@ class Random {
     return Math.random() * (-2 - 2) + 0;
   }
 
-  static vector3Position() {
+  static vector3Position(): Position {
     return [this.randomBetweenOneAndTwo(), 0, this.randomBetweenOneAndTwo()];
   }
 

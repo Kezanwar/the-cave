@@ -10,7 +10,6 @@ const Multiplayers: FC = observer(() => {
       hairColor={c.hairColor}
       topColor={c.topColor}
       bottomColor={c.bottomColor}
-      position={c.position}
     />
   ));
 });
