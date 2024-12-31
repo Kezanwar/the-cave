@@ -2,14 +2,16 @@ import { makeObservable } from 'mobx';
 import { io } from 'socket.io-client';
 import { RootStore } from '@app/store/index';
 import { Character, initCharacters, Position } from './game';
-import { positionLocal } from 'three/tsl';
+
 import { CommonAnimationNames } from '@app/animations';
 
 const socket = io('http://localhost:3000');
 
-type MoveCharacterBroadcast = {
+export type MoveCharacterBroadcast = {
   id: string;
   position: Position;
+  rotate: number;
+  anim: CommonAnimationNames;
 };
 
 class SocketStore {
@@ -27,7 +29,6 @@ class SocketStore {
 
   onGameInitialize = (characters: initCharacters) => {
     this.rootStore.game.initialize(characters);
-    console.log('initialize!', characters);
   };
 
   onRoomPlayerJoin = (character: Character) => {
@@ -39,7 +40,7 @@ class SocketStore {
   };
 
   onRoomPlayerMove = (data: MoveCharacterBroadcast) => {
-    this.rootStore.game.moveCharacter(data.id, data.position);
+    this.rootStore.game.moveCharacter(data);
   };
 
   emitPlayerJoin(char: Character) {

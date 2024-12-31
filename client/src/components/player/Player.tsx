@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import store from '@app/store';
 
 import { useCursor } from '@react-three/drei';
-import Controller from '../controllers/third-person/Controller';
+import Controller from '../controllers/third-person/ThirdPersonController';
 
 const Player: FC = observer(() => {
   useCursor(store.player.mouseOnFloor);
@@ -13,7 +13,7 @@ const Player: FC = observer(() => {
   return (
     <Controller>
       <AnimatedWoman
-        isPlayer={true}
+        isPlayer
         hairColor={store.player.character.hairColor}
         topColor={store.player.character.topColor}
         bottomColor={store.player.character.bottomColor}

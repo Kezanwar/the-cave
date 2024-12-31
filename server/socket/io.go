@@ -11,6 +11,6 @@ type PlayerMoveInput struct {
 type PlayerMoveBroadcast struct {
 	Id       string        `json:"id"`
 	Position game.Position `json:"position"`
-	Rotate   float64       `json:"Rotate"`
+	Rotate   float64       `json:"rotate"`
 	Anim     string        `json:"anim"`
 }

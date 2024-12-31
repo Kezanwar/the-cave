@@ -4,15 +4,15 @@ Command: npx gltfjsx@6.5.3 public/models/Animated Woman.glb -o src/components/ch
 */
 
 import * as THREE from 'three';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { Euler, useFrame, useGraph } from '@react-three/fiber';
+import React, { FC, useEffect } from 'react';
+import { Euler, useGraph } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { GLTF, SkeletonUtils } from 'three-stdlib';
-import { RigidBody } from '@react-three/rapier';
-import { MOVEMENT_SPEED } from '@app/constants';
+
 import { observer } from 'mobx-react-lite';
-import { Position } from '@app/store/game';
+
 import { CommonAnimationNames } from '@app/animations';
+import store from '@app/store';
 
 export type ActionName =
   | 'CharacterArmature|Death'
@@ -44,9 +44,25 @@ export type ActionName =
 const commonAnimMap: CommonAnimMap = {
   run: 'CharacterArmature|Run',
   run_back: 'CharacterArmature|Run_Back',
+  run_right: 'CharacterArmature|Run_Right',
+  run_left: 'CharacterArmature|Run_Left',
   idle: 'CharacterArmature|Idle',
   walk: 'CharacterArmature|Walk',
-  jump: 'CharacterArmature|Roll' // Example: use "Roll" for "jump"
+  jump: 'CharacterArmature|Roll', // Example: use "Roll" for "jump"
+  wave: 'CharacterArmature|Wave'
+};
+
+const animLoop = (anim: CommonAnimationNames) => {
+  switch (anim) {
+    case 'idle':
+    case 'run':
+    case 'run_back':
+    case 'run_left':
+    case 'run_right':
+      return THREE.LoopRepeat;
+    default:
+      return THREE.LoopOnce;
+  }
 };
 
 type CommonAnimMap = {
@@ -92,7 +108,7 @@ type Props = {
 
 const rotations: Euler = [-Math.PI / 2, 0, 0];
 
-const CharRotat: Euler = [0, Math.PI, 0];
+const charRotate: Euler = [0, Math.PI, 0];
 const scale = 100;
 
 const AnimatedWoman: FC<Props> = observer(
@@ -100,23 +116,39 @@ const AnimatedWoman: FC<Props> = observer(
     hairColor = 'maroon',
     topColor = 'green',
     bottomColor = 'purple',
-    anim
+    anim,
+    isPlayer
     // position
-    // isPlayer
   }) => {
     const group = React.useRef<THREE.Group>(null);
     const { scene, animations } = useGLTF('/models/Animated Woman.glb');
     const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
     const { nodes, materials } = useGraph(clone) as GLTFResult;
-    const { actions } = useAnimations(animations, group);
+    const { actions, mixer } = useAnimations(animations, group);
+
+    useEffect(() => {
+      function fn() {
+        store.player.onStaticAnimationEnd();
+      }
+      if (isPlayer) {
+        mixer.addEventListener('finished', fn);
+      }
+
+      return () => {
+        if (isPlayer) {
+          mixer.removeEventListener('finished', fn);
+        }
+      };
+    }, []);
 
     useEffect(() => {
       if (anim) {
         actions[commonAnimMap[anim]]
           ?.reset()
           .fadeIn(0.2)
-          .play()
-          .setDuration(0.75);
+          .setDuration(0.75)
+          .setLoop(animLoop(anim), Infinity)
+          .play();
       }
       return () => {
         if (anim) {
@@ -125,51 +157,13 @@ const AnimatedWoman: FC<Props> = observer(
       };
     }, [anim]);
 
-    // const startPos = useMemo(() => {
-    //   return new THREE.Vector3(position[0], 0, position[2]);
-    // }, []);
-
-    // useFrame(({ camera }) => {
-    //   if (group.current && position) {
-    //     if (isPlayer) {
-    //       camera.lookAt(
-    //         group.current?.position.clone().lerp(group.current?.position, 0.1)
-    //       );
-    //     }
-    //     if (group.current.position.distanceTo(newPos.current) > 0.04) {
-    //       const direction = group.current.position
-    //         .clone()
-    //         .sub(newPos.current)
-    //         .normalize()
-    //         .multiplyScalar(MOVEMENT_SPEED);
-    //       group.current.position.sub(direction);
-
-    //       setAnimation('CharacterArmature|Run');
-    //     } else {
-    //       setAnimation('CharacterArmature|Idle');
-    //     }
-    //   }
-    // });
-
-    // useEffect(() => {
-    //   if (group.current) {
-    //     newPos.current = new THREE.Vector3(position[0], 0, position[2]);
-    //     group.current.lookAt(newPos.current);
-    //   }
-    // }, [position]);
-
-    // const newPos = useRef<THREE.Vector3>(
-    //   new THREE.Vector3(position[0], 0, position[2])
-    // );
-
     return (
       // <RigidBody colliders={'trimesh'} lockRotations>
       <group
         castShadow
         ref={group}
         scale={1}
-        // position={startPos}
-        rotation={CharRotat}
+        rotation={charRotate}
         dispose={null}
       >
         <group name="Root_Scene">

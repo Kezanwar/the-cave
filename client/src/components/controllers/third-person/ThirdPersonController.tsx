@@ -1,14 +1,25 @@
 // import { useKeyboardControls } from '@react-three/drei';
 import { CommonAnimationNames } from '@app/animations';
+import { Controls } from '@app/hocs/keyboard';
 import store from '@app/store';
 import { Position } from '@app/store/game';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, useKeyboardControls } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
 import { useControls } from 'leva';
-import React, { FC, ReactNode, useMemo, useRef, useState } from 'react';
+import React, {
+  FC,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { Group, Vector3 } from 'three';
-import { useKeyboard } from '../../../hocs/keyboard';
+
+const speed = 3; // Movement speed
+const rotationSpeed = Math.PI * 0.5; // Rotation speed (radians per second)
+const delta = 1 / 60; // Approximate frame delta for consistent behavior
 
 type Props = { children?: ReactNode };
 
@@ -18,21 +29,27 @@ const Controller: FC<Props> = ({ children }) => {
   }, []);
 
   const ref = useRef<Group>(null);
-  const firstRender = useRef(true);
 
   const [enabledOrbitControls, setEnabledOrbitControls] =
     useState<boolean>(true);
 
-  const [_, get] = useKeyboard();
+  const [sub, get] = useKeyboardControls<Controls>();
+
+  useEffect(() => {
+    return sub(
+      (state) => state.wave,
+      (pressed) => {
+        if (pressed && store.player.character.anim !== 'wave') {
+          store.player.setStaticAnim('wave');
+        }
+      }
+    );
+  }, []);
 
   // Store the last sent position/rotation to avoid redundant emits
 
   useFrame(({ camera }) => {
     if (!ref.current) return;
-
-    const speed = 5; // Movement speed
-    const rotationSpeed = Math.PI * 0.5; // Rotation speed (radians per second)
-    const delta = 1 / 60; // Approximate frame delta for consistent behavior
 
     let hasMoved = false; // Track if the character has moved
 
@@ -44,6 +61,17 @@ const Controller: FC<Props> = ({ children }) => {
         Math.cos(ref.current.rotation.y) * speed * delta;
       ref.current.position.x -=
         Math.sin(ref.current.rotation.y) * speed * delta;
+
+      // Rotate left
+      if (get().left) {
+        ref.current.rotation.y += rotationSpeed * delta;
+      }
+
+      // Rotate right
+      if (get().right) {
+        ref.current.rotation.y -= rotationSpeed * delta;
+      }
+
       hasMoved = true;
       anim = 'run';
     }
@@ -54,27 +82,55 @@ const Controller: FC<Props> = ({ children }) => {
         Math.cos(ref.current.rotation.y) * speed * delta;
       ref.current.position.x +=
         Math.sin(ref.current.rotation.y) * speed * delta;
+
+      // Rotate left
+      if (get().left) {
+        ref.current.rotation.y += rotationSpeed * delta;
+      }
+
+      // Rotate right
+      if (get().right) {
+        ref.current.rotation.y -= rotationSpeed * delta;
+      }
+
       hasMoved = true;
       anim = 'run_back';
     }
 
-    store.player.setAnim(anim);
+    const animChanged = anim !== store.player.character.anim;
 
-    // Rotate left
-    if (get().left) {
+    if (get().left && !get().forward && !get().back) {
+      ref.current.position.x -=
+        Math.cos(ref.current.rotation.y) * speed * delta;
+      ref.current.position.z +=
+        Math.sin(ref.current.rotation.y) * speed * delta;
+      hasMoved = true;
+      anim = 'run_left';
+    }
+
+    // Walk right (D key without forward/backward)
+    if (get().right && !get().forward && !get().back) {
+      ref.current.position.x +=
+        Math.cos(ref.current.rotation.y) * speed * delta;
+      ref.current.position.z -=
+        Math.sin(ref.current.rotation.y) * speed * delta;
+      hasMoved = true;
+      anim = 'run_right';
+    }
+
+    if (get().rotate_left && !get().forward && !get().back && !get().left) {
       ref.current.rotation.y += rotationSpeed * delta;
       hasMoved = true;
     }
 
-    // Rotate right
-    if (get().right) {
+    if (get().rotate_right && !get().forward && !get().back && !get().right) {
       ref.current.rotation.y -= rotationSpeed * delta;
       hasMoved = true;
     }
 
     setEnabledOrbitControls(!hasMoved);
 
-    if (hasMoved) {
+    if (hasMoved || (animChanged && !store.player.isStaticAnim)) {
       const newPos = ref.current.position.toArray() as Position;
       const newRotate = ref.current.rotation.y;
 
@@ -91,8 +147,8 @@ const Controller: FC<Props> = ({ children }) => {
       rotationChanged =
         Math.abs(newRotate - store.player.character.rotate) > 0.01;
 
-      if (positionChanged || rotationChanged) {
-        store.player.moveTo(newPos, newRotate, anim);
+      if (positionChanged || rotationChanged || animChanged) {
+        store.player.moveTo(newPos, newRotate, anim, true);
       }
 
       // firstRender.current = false;

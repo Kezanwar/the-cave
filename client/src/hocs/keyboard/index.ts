@@ -1,6 +1,6 @@
 import Keyboard from './Keyboard';
-import useKeyboard from './useKeyboard';
+import { Controls } from './Keyboard';
 
 export default Keyboard;
 
-export { useKeyboard };
+export { Controls };

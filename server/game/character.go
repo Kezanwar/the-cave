@@ -8,6 +8,6 @@ type Character struct {
 	TopColor    string   `json:"topColor"`
 	BottomColor string   `json:"bottomColor"`
 	Position    Position `json:"position"`
-	Rotate      float64  `json:"Rotate"`
+	Rotate      float64  `json:"rotate"`
 	Anim        string   `json:"anim"`
 }

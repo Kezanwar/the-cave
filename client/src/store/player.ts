@@ -13,7 +13,8 @@ class PlayerStore {
       mouseOnFloor: observable,
       setMouseOnFloor: action,
       moveTo: action,
-      setAnim: action
+      setStaticAnim: action,
+      onStaticAnimationEnd: action
     });
 
     this.rootStore = rootStore;
@@ -35,15 +36,41 @@ class PlayerStore {
     this.mouseOnFloor = bool;
   }
 
-  setAnim(anim: CommonAnimationNames) {
+  setStaticAnim(anim: CommonAnimationNames) {
+    this.isStaticAnim = true;
     this.character.anim = anim;
+    this.moveTo(
+      this.character.position,
+      this.character.rotate,
+      this.character.anim,
+      false
+    );
   }
 
-  moveTo(pos: Position, rotate: number, anim: CommonAnimationNames) {
+  onStaticAnimationEnd() {
+    this.character.anim = 'idle';
+    this.isStaticAnim = false;
+    this.rootStore.socket.emitPlayerMove(
+      this.character.position,
+      this.character.rotate,
+      this.character.anim
+    );
+  }
+
+  isStaticAnim = false;
+
+  moveTo(
+    pos: Position,
+    rotate: number,
+    anim: CommonAnimationNames,
+    isLoopedAnim: boolean
+  ) {
     this.character.position = pos;
     this.character.rotate = rotate;
-    this.character.anim = anim;
-    this.rootStore.socket.emitPlayerMove(pos, rotate, anim);
+    if (isLoopedAnim && !this.isStaticAnim) {
+      this.character.anim = anim;
+    }
+    this.rootStore.socket.emitPlayerMove(pos, rotate, this.character.anim);
   }
 }
 

@@ -1,2 +1,2 @@
-import CharacterController from './Controller';
-export default CharacterController;
+import ThirdPersonController from './ThirdPersonController';
+export default ThirdPersonController;

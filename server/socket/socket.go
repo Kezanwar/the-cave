@@ -109,44 +109,32 @@ func (s *Socket) Router() http.Handler {
 
 			if len(id) > 0 {
 
-				jsonData, err := s.GetJsonFromSocketMsg(msgs[0])
+				go func() {
+					jsonData, err := s.GetJsonFromSocketMsg(msgs[0])
 
-				if err != nil {
-					fmt.Println("player:move -- unable to get json from msg")
-					panic(0)
-				}
+					if err != nil {
+						fmt.Println("player:move -- unable to get json from msg")
+						panic(0)
+					}
 
-				input := &PlayerMoveInput{}
+					input := &PlayerMoveInput{}
 
-				err = json.Unmarshal(jsonData, input)
-				if err != nil {
-					fmt.Println("player:move -- unable to unmarshal msg to struct")
-					panic(0)
-				}
+					err = json.Unmarshal(jsonData, input)
+					if err != nil {
+						fmt.Println("player:move -- unable to unmarshal msg to struct")
+						panic(0)
+					}
+					game.Characters[id].Position = input.Position
+					game.Characters[id].Anim = input.Anim
+					game.Characters[id].Rotate = input.Rotate
 
-				// data, ok := msgs[0].([]interface{})
+					client.Broadcast().Emit("room:player:move", &PlayerMoveBroadcast{
+						Id:       game.Characters[id].Id,
+						Position: game.Characters[id].Position,
+						Rotate:   game.Characters[id].Rotate,
+						Anim:     game.Characters[id].Anim})
+				}()
 
-				// if !ok {
-				// 	fmt.Println("player:move -- cant cast find position in move")
-				// 	panic(0)
-				// }
-
-				// var pos = &game.Position{}
-
-				// for i := 0; i < 3; i++ {
-				// 	point, ok := data[i].(float64)
-				// 	if !ok {
-				// 		fmt.Println("player:move -- cant cast interface to float64 in position in move")
-				// 		panic(0)
-				// 	}
-				// 	pos[i] = point
-				// }
-
-				game.Characters[id].Position = input.Position
-				game.Characters[id].Anim = input.Anim
-				game.Characters[id].Rotate = input.Rotate
-
-				client.Broadcast().Emit("room:player:move", &PlayerMoveBroadcast{Id: game.Characters[id].Id, Position: game.Characters[id].Position})
 			}
 
 		})
