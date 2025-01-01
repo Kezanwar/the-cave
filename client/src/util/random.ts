@@ -3,12 +3,12 @@ import { Vector3 } from '@react-three/fiber';
 import { v4 } from 'uuid';
 
 class Random {
-  static randomBetweenOneAndTwo() {
+  static randomPoint() {
     return Math.random() * (-2 - 2) + 0;
   }
 
   static vector3Position(): Position {
-    return [this.randomBetweenOneAndTwo(), 0, this.randomBetweenOneAndTwo()];
+    return [this.randomPoint(), 0, this.randomPoint()];
   }
 
   static hexColorCode() {

@@ -16,7 +16,7 @@ const RootScene: FC = () => {
       <Environment preset="sunset" />
       <ambientLight shadow={'#f1f1f'} intensity={1.2} />
       <Suspense>
-        <Physics colliders={false}>
+        <Physics debug colliders={false}>
           <Lobby>
             <Player />
             <Multiplayers />

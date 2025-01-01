@@ -1,44 +1,50 @@
+import { ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useKeyboardControls } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import {
-  CapsuleArgs,
-  CapsuleCollider,
-  RapierRigidBody,
-  RigidBody
-} from '@react-three/rapier';
-import { ReactNode, useEffect, useRef } from 'react';
-import { MathUtils, Vector3, Group } from 'three';
+import { RapierRigidBody, RigidBody, vec3 } from '@react-three/rapier';
+import { Vector3, Group, Euler } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { Controls } from '@app/hocs/keyboard';
 import store from '@app/store';
 import { CommonAnimationNames } from '@app/animations';
+import { Position } from '@app/store/game';
+import CharacterCapsule from '../colliders/CharacterCapsule';
 
 type Movement = {
   x: number;
   z: number;
 };
 
+type InitialPosRotate = {
+  position: Position;
+  rotation: Euler;
+};
+
 type Props = {
   children: ReactNode;
 };
 
-const colliderArgs: CapsuleArgs = [0.8, 0.25];
-
-const ROTATION_SPEED = degToRad(1.2);
+const ROTATION_SPEED = degToRad(1.7);
 const RUN_SPEED = 8;
 
 const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
   const rb = useRef<RapierRigidBody>(null);
-  const container = useRef<Group>(null);
-  const character = useRef<Group>(null);
 
-  const rotationTarget = useRef<number>(0);
+  const character = useRef<Group>(null);
   const cameraTarget = useRef<Group>(null);
   const cameraPosition = useRef<Group>(null);
   const cameraWorldPosition = useRef<Vector3>(new Vector3());
   const cameraLookAtWorldPosition = useRef<Vector3>(new Vector3());
   const cameraLookAt = useRef<Vector3>(new Vector3());
+
   const [sub, get] = useKeyboardControls<Controls>();
+
+  const initialPosAndRotate: InitialPosRotate = useMemo(() => {
+    return {
+      position: store.player.character.position,
+      rotation: new Euler(0, store.player.character.rotate, 0)
+    };
+  }, []);
 
   useEffect(() => {
     return sub(
@@ -52,7 +58,7 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
   }, []);
 
   useFrame(({ camera }) => {
-    if (rb.current) {
+    if (rb.current && character.current) {
       const vel = rb.current.linvel();
 
       const movement: Movement = {
@@ -64,14 +70,19 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
 
       let anim: CommonAnimationNames = 'idle';
       let hasMoved = false;
+      let onlyRotate = false;
 
       // Rotate independently with Q/E
+      // Handle rotation
       if (controls.rotate_left) {
-        rotationTarget.current += ROTATION_SPEED;
+        character.current.rotation.y += ROTATION_SPEED;
+        onlyRotate = true;
       }
 
+      // Rotate right
       if (controls.rotate_right) {
-        rotationTarget.current -= ROTATION_SPEED;
+        character.current.rotation.y -= ROTATION_SPEED;
+        onlyRotate = true;
       }
 
       if (controls.forward) {
@@ -79,12 +90,15 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
         hasMoved = true;
         anim = 'run';
 
-        // Rotate if moving forward with A or D
+        // // Rotate if moving forward with A or D
+        // Rotate left
         if (controls.left) {
-          rotationTarget.current += ROTATION_SPEED;
+          character.current.rotation.y += ROTATION_SPEED;
         }
+
+        // Rotate right
         if (controls.right) {
-          rotationTarget.current -= ROTATION_SPEED;
+          character.current.rotation.y -= ROTATION_SPEED;
         }
       }
 
@@ -94,12 +108,13 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
         hasMoved = true;
         anim = 'run_back';
 
-        // Rotate if moving backward with A or D
         if (controls.left) {
-          rotationTarget.current += ROTATION_SPEED;
+          character.current.rotation.y -= ROTATION_SPEED;
         }
+
+        // Rotate right
         if (controls.right) {
-          rotationTarget.current -= ROTATION_SPEED;
+          character.current.rotation.y += ROTATION_SPEED;
         }
       }
 
@@ -119,36 +134,25 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
 
       const animChanged = anim !== store.player.character.anim;
 
-      if (hasMoved || (animChanged && !store.player.isStaticAnim)) {
-        const targetRotation = rotationTarget.current;
+      const rotate = character.current.rotation.y;
 
-        vel.x =
-          Math.sin(targetRotation + Math.atan2(movement.x, movement.z)) *
-          RUN_SPEED;
-        vel.z =
-          Math.cos(targetRotation + Math.atan2(movement.x, movement.z)) *
-          RUN_SPEED;
+      if (!hasMoved && onlyRotate) {
+        const newPos = vec3(rb.current.translation());
+        store.player.moveTo([newPos.x, newPos.y, newPos.z], rotate, anim, true);
+      } else if (hasMoved || (animChanged && !store.player.isStaticAnim)) {
+        // Calculate movement direction based on rotation
+        const directionAngle = Math.atan2(movement.x, movement.z);
+        const adjustedAngle = directionAngle + rotate;
 
-        rb.current.setLinvel(vel, true);
+        vel.x = Math.sin(adjustedAngle) * RUN_SPEED; // X velocity
+        vel.z = Math.cos(adjustedAngle) * RUN_SPEED; // Z velocity
 
-        const newPos = rb.current.translation();
+        rb.current.setLinvel(vel, true); // Apply velocity to RigidBody
 
-        store.player.moveTo(
-          [newPos.x, newPos.y, newPos.z],
-          rb.current.rotation().y,
-          anim,
-          true
-        );
+        const newPos = vec3(rb.current.translation());
+
+        store.player.moveTo([newPos.x, newPos.y, newPos.z], rotate, anim, true);
       }
-    }
-
-    // CAMERA
-    if (container.current) {
-      container.current.rotation.y = MathUtils.lerp(
-        container.current.rotation.y,
-        rotationTarget.current,
-        0.1
-      );
     }
 
     if (cameraPosition.current) {
@@ -159,19 +163,23 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
     if (cameraTarget.current) {
       cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current);
       cameraLookAt.current.lerp(cameraLookAtWorldPosition.current, 0.1);
-
       camera.lookAt(cameraLookAt.current);
     }
   });
 
   return (
-    <RigidBody colliders={false} lockRotations ref={rb}>
-      <group ref={container}>
-        <group ref={cameraTarget} position-z={-10} />
-        <group ref={cameraPosition} position-y={1.5} position-z={3} />
-        <group ref={character}>{children}</group>
+    <RigidBody
+      position={initialPosAndRotate.position}
+      colliders={false}
+      lockRotations
+      ref={rb}
+    >
+      <group rotation={initialPosAndRotate.rotation} ref={character}>
+        <group ref={cameraTarget} position-z={-20} />
+        <group ref={cameraPosition} position-y={2.75} position-z={3} />
+        {children}
       </group>
-      <CapsuleCollider args={colliderArgs} />
+      <CharacterCapsule />
     </RigidBody>
   );
 };

@@ -1,2 +1,4 @@
 import MultiplayerController from './MultiplayerController';
-export default MultiplayerController;
+import MultiplayerRapierController from './MultiplayerRapierController';
+
+export { MultiplayerController, MultiplayerRapierController };

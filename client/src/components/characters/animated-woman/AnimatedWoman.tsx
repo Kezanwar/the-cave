@@ -13,6 +13,7 @@ import { observer } from 'mobx-react-lite';
 
 import { CommonAnimationNames } from '@app/animations';
 import store from '@app/store';
+import { Position } from '@app/store/game';
 
 export type ActionName =
   | 'CharacterArmature|Death'
@@ -118,7 +119,6 @@ const AnimatedWoman: FC<Props> = observer(
     bottomColor = 'purple',
     anim,
     isPlayer
-    // position
   }) => {
     const group = React.useRef<THREE.Group>(null);
     const { scene, animations } = useGLTF('/models/Animated Woman.glb');
@@ -158,14 +158,7 @@ const AnimatedWoman: FC<Props> = observer(
     }, [anim]);
 
     return (
-      <group
-        castShadow
-        ref={group}
-        scale={1}
-        position={[0, -0.8, 0]}
-        rotation={charRotate}
-        dispose={null}
-      >
+      <group castShadow ref={group} rotation={charRotate}>
         <group name="Root_Scene">
           <group name="RootNode">
             <group name="CharacterArmature" rotation={rotations} scale={scale}>
