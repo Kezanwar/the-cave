@@ -167,7 +167,7 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
   return (
     <RigidBody colliders={false} lockRotations ref={rb}>
       <group ref={container}>
-        <group ref={cameraTarget} position-z={-2} />
+        <group ref={cameraTarget} position-z={-10} />
         <group ref={cameraPosition} position-y={1.5} position-z={3} />
         <group ref={character}>{children}</group>
       </group>
