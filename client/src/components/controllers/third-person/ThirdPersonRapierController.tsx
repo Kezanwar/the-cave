@@ -129,6 +129,8 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
           Math.cos(targetRotation + Math.atan2(movement.x, movement.z)) *
           RUN_SPEED;
 
+        rb.current.setLinvel(vel, true);
+
         const newPos = rb.current.translation();
 
         store.player.moveTo(
@@ -137,8 +139,6 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
           anim,
           true
         );
-
-        rb.current.setLinvel(vel, true);
       }
     }
 
