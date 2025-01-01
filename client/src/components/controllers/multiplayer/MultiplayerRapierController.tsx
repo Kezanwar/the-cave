@@ -11,6 +11,8 @@ import {
   RigidBody
 } from '@react-three/rapier';
 import CharacterCapsule from '../colliders/CharacterCapsule';
+import { Billboard, Text } from '@react-three/drei';
+import Nameplate from '@app/components/billboards/nameplate';
 
 type Props = { character: Character };
 
@@ -32,7 +34,6 @@ const MultiplayerRapierController: FC<Props> = observer(({ character }) => {
 
   useEffect(() => {
     if (rb.current && c.current) {
-      console.log(character.position);
       rb.current.setTranslation(
         {
           x: character.position[0],
@@ -52,6 +53,7 @@ const MultiplayerRapierController: FC<Props> = observer(({ character }) => {
       ref={rb}
       position={initialPosAndRotate.position}
     >
+      <Nameplate name={'Divvy3'} />
       <group rotation={initialPosAndRotate.rotation} ref={c}>
         <AnimatedWoman
           isPlayer={false}

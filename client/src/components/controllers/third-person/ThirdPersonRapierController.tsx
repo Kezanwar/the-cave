@@ -177,6 +177,7 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
       <group rotation={initialPosAndRotate.rotation} ref={character}>
         <group ref={cameraTarget} position-z={-20} />
         <group ref={cameraPosition} position-y={2.75} position-z={3} />
+
         {children}
       </group>
       <CharacterCapsule />

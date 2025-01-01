@@ -4,16 +4,12 @@ Command: npx gltfjsx@6.5.3 public/models/Animated Woman.glb -o src/components/ch
 */
 
 import * as THREE from 'three';
-import React, { FC, useEffect } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 import { Euler, useGraph } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { GLTF, SkeletonUtils } from 'three-stdlib';
-
-import { observer } from 'mobx-react-lite';
-
 import { CommonAnimationNames } from '@app/animations';
 import store from '@app/store';
-import { Position } from '@app/store/game';
 
 export type ActionName =
   | 'CharacterArmature|Death'
@@ -112,7 +108,7 @@ const rotations: Euler = [-Math.PI / 2, 0, 0];
 const charRotate: Euler = [0, Math.PI, 0];
 const scale = 100;
 
-const AnimatedWoman: FC<Props> = observer(
+const AnimatedWoman: FC<Props> = memo(
   ({
     hairColor = 'maroon',
     topColor = 'green',
