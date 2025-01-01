@@ -10,8 +10,6 @@ class PlayerStore {
   constructor(rootStore: RootStore) {
     makeObservable(this, {
       character: observable,
-      mouseOnFloor: observable,
-      setMouseOnFloor: action,
       moveTo: action,
       setStaticAnim: action,
       onStaticAnimationEnd: action
@@ -29,12 +27,6 @@ class PlayerStore {
     anim: 'idle',
     rotate: 0
   };
-
-  mouseOnFloor = false;
-
-  setMouseOnFloor(bool: boolean) {
-    this.mouseOnFloor = bool;
-  }
 
   setStaticAnim(anim: CommonAnimationNames) {
     this.isStaticAnim = true;

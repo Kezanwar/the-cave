@@ -58,7 +58,6 @@ class GameStore {
   }
 
   moveCharacter(data: MoveCharacterBroadcast) {
-    console.log(data);
     const c = this.characters.get(data.id);
     if (c) {
       c.position = data.position;

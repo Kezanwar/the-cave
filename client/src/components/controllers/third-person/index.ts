@@ -1,2 +1,3 @@
 import ThirdPersonController from './ThirdPersonController';
-export default ThirdPersonController;
+import ThirdPersonRapierController from './ThirdPersonRapierController';
+export { ThirdPersonController, ThirdPersonRapierController };

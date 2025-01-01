@@ -1,20 +1,11 @@
-// import { useKeyboardControls } from '@react-three/drei';
+import { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { CommonAnimationNames } from '@app/animations';
 import { Controls } from '@app/hocs/keyboard';
 import store from '@app/store';
 import { Position } from '@app/store/game';
-import { OrbitControls, useKeyboardControls } from '@react-three/drei';
+import { useKeyboardControls } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
-import { useControls } from 'leva';
-import React, {
-  FC,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
 import { Group, Vector3 } from 'three';
 
 const speed = 3; // Movement speed
@@ -23,15 +14,12 @@ const delta = 1 / 60; // Approximate frame delta for consistent behavior
 
 type Props = { children?: ReactNode };
 
-const Controller: FC<Props> = ({ children }) => {
+const ThirdPersonController: FC<Props> = ({ children }) => {
   const startPos: Position = useMemo(() => {
     return [...store.player.character.position];
   }, []);
 
   const ref = useRef<Group>(null);
-
-  const [enabledOrbitControls, setEnabledOrbitControls] =
-    useState<boolean>(true);
 
   const [sub, get] = useKeyboardControls<Controls>();
 
@@ -128,8 +116,6 @@ const Controller: FC<Props> = ({ children }) => {
       hasMoved = true;
     }
 
-    setEnabledOrbitControls(!hasMoved);
-
     if (hasMoved || (animChanged && !store.player.isStaticAnim)) {
       const newPos = ref.current.position.toArray() as Position;
       const newRotate = ref.current.rotation.y;
@@ -171,16 +157,10 @@ const Controller: FC<Props> = ({ children }) => {
   });
 
   return (
-    <>
-      <OrbitControls
-        position={store.player.character.position}
-        enabled={enabledOrbitControls}
-      />
-      <group ref={ref} position={startPos}>
-        {children}
-      </group>
-    </>
+    <group ref={ref} position={startPos}>
+      {children}
+    </group>
   );
 };
 
-export default Controller;
+export default ThirdPersonController;

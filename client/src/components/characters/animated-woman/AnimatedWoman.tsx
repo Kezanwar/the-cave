@@ -158,11 +158,11 @@ const AnimatedWoman: FC<Props> = observer(
     }, [anim]);
 
     return (
-      // <RigidBody colliders={'trimesh'} lockRotations>
       <group
         castShadow
         ref={group}
         scale={1}
+        position={[0, -0.8, 0]}
         rotation={charRotate}
         dispose={null}
       >
@@ -242,7 +242,6 @@ const AnimatedWoman: FC<Props> = observer(
           </group>
         </group>
       </group>
-      // </RigidBody>
     );
   }
 );
