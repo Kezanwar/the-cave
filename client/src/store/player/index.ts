@@ -1,8 +1,8 @@
 import { makeObservable, observable, action } from 'mobx';
 import { RootStore } from '@app/store/index';
-import { Character, Position } from './game';
 import Random from '@app/util/random';
-import { CommonAnimationNames } from '@app/animations';
+import { Character, CharacterCommonAnimationNames } from '@app/types/character';
+import { Position } from '@app/types/physics';
 
 class PlayerStore {
   rootStore: RootStore;
@@ -28,7 +28,7 @@ class PlayerStore {
     rotate: 0
   };
 
-  setStaticAnim(anim: CommonAnimationNames) {
+  setStaticAnim(anim: CharacterCommonAnimationNames) {
     this.isStaticAnim = true;
     this.character.anim = anim;
     this.moveTo(
@@ -42,7 +42,7 @@ class PlayerStore {
   onStaticAnimationEnd() {
     this.character.anim = 'idle';
     this.isStaticAnim = false;
-    this.rootStore.socket.emitPlayerMove(
+    this.rootStore.lobby.emitPlayerMove(
       this.character.position,
       this.character.rotate,
       this.character.anim
@@ -54,7 +54,7 @@ class PlayerStore {
   moveTo(
     pos: Position,
     rotate: number,
-    anim: CommonAnimationNames,
+    anim: CharacterCommonAnimationNames,
     isLoopedAnim: boolean
   ) {
     this.character.position = pos;
@@ -62,7 +62,7 @@ class PlayerStore {
     if (isLoopedAnim && !this.isStaticAnim) {
       this.character.anim = anim;
     }
-    this.rootStore.socket.emitPlayerMove(pos, rotate, this.character.anim);
+    this.rootStore.lobby.emitPlayerMove(pos, rotate, this.character.anim);
   }
 }
 

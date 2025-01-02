@@ -2,7 +2,8 @@ package main
 
 import (
 	"TheCave/api"
-	"TheCave/socket"
+	socketio "TheCave/socket"
+
 	"log"
 	"net/http"
 	"os"
@@ -18,7 +19,7 @@ func main() {
 	server := mux.NewRouter()
 
 	_api := &api.APIServer{}
-	_socket := &socket.Socket{}
+	_socket := &socketio.Socket{}
 
 	server.Handle("/api/", http.StripPrefix("/api", _api.Router()))
 	server.Handle("/socket.io/", _socket.Router())
@@ -42,6 +43,7 @@ func main() {
 	}()
 
 	<-exit
+	_socket.Close()
 	os.Exit(0)
 
 }

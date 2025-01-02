@@ -1,8 +1,6 @@
 import { FC, memo } from 'react';
-
 import { Billboard, Text } from '@react-three/drei';
-
-import { Position } from '@app/store/game';
+import { Position } from '@app/types/physics';
 
 type Props = {
   name: string;

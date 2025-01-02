@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import store from '@app/store';
 
-const useInitGame = () => {
+const useInitLobby = () => {
   useEffect(() => {
-    store.socket.on();
+    store.lobby.on();
     return () => {
-      store.socket.off();
+      store.lobby.off();
     };
   }, []);
 };
 
-export default useInitGame;
+export default useInitLobby;

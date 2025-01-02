@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { Euler, Vector3 } from '@react-three/fiber';
 import { DoubleSide } from 'three';
 import { RigidBody } from '@react-three/rapier';
@@ -17,7 +17,7 @@ const rotate: Euler = [Math.PI / 2, 0, 0];
 const size = [40, 40];
 const colour = '#fff';
 
-const Floor: FC = () => {
+const Floor: FC = memo(() => {
   return (
     <RigidBody type="fixed" friction={20} colliders={'cuboid'}>
       <mesh position={pos} rotation={rotate}>
@@ -26,6 +26,6 @@ const Floor: FC = () => {
       </mesh>
     </RigidBody>
   );
-};
+});
 
 export default Floor;

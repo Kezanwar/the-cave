@@ -2,17 +2,13 @@ import { FC, useEffect, useMemo, useRef } from 'react';
 import { Euler, Group } from 'three';
 import { observer } from 'mobx-react-lite';
 
-import { Character, Position } from '@app/store/game';
 import AnimatedWoman from '@app/components/characters/animated-woman';
-import {
-  CapsuleArgs,
-  CapsuleCollider,
-  RapierRigidBody,
-  RigidBody
-} from '@react-three/rapier';
+import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 import CharacterCapsule from '../colliders/CharacterCapsule';
-import { Billboard, Text } from '@react-three/drei';
+
 import Nameplate from '@app/components/billboards/nameplate';
+import { Character } from '@app/types/character';
+import { Position } from '@app/types/physics';
 
 type Props = { character: Character };
 
@@ -53,7 +49,7 @@ const MultiplayerRapierController: FC<Props> = observer(({ character }) => {
       ref={rb}
       position={initialPosAndRotate.position}
     >
-      <Nameplate name={'Divvy3'} />
+      <Nameplate name={'Zooko'} />
       <group rotation={initialPosAndRotate.rotation} ref={c}>
         <AnimatedWoman
           isPlayer={false}

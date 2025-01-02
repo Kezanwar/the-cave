@@ -1,9 +1,10 @@
-import { FC } from 'react';
-import { Euler, Vector3 } from '@react-three/fiber';
-import { Color, DoubleSide } from 'three';
-import { Position } from '@app/store/game';
+import { FC, memo } from 'react';
+import { Euler } from '@react-three/fiber';
+import { DoubleSide } from 'three';
+
 import { RigidBody } from '@react-three/rapier';
-import { Box } from '@react-three/drei';
+
+import { Position } from '@app/types/physics';
 
 type args =
   | [
@@ -22,7 +23,7 @@ type Props = {
 
 const size = [40, 10];
 
-const Wall: FC<Props> = ({ position, colour, rotation }) => {
+const Wall: FC<Props> = memo(({ position, colour, rotation }) => {
   return (
     <RigidBody type="fixed" colliders={'cuboid'}>
       <mesh position={position} rotation={rotation}>
@@ -31,6 +32,6 @@ const Wall: FC<Props> = ({ position, colour, rotation }) => {
       </mesh>
     </RigidBody>
   );
-};
+});
 
 export default Wall;

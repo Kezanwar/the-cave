@@ -1,12 +1,13 @@
-import React, { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import Floor from './components/Floor';
 import Wall from './components/Wall';
-import { Position } from '@app/store/game';
-import { Euler } from '@react-three/fiber';
 
-type Props = {
-  children: ReactNode;
-};
+import { Euler } from '@react-three/fiber';
+import { Position } from '@app/types/physics';
+import Player from '@app/components/player';
+
+import useInitLobby from './hooks/useInitLobby';
+import Multiplayers from './components/Multiplayers';
 
 const WALL_POSITIONS = {
   TOP: {
@@ -27,7 +28,8 @@ const WALL_POSITIONS = {
   }
 };
 
-const Lobby: FC<Props> = ({ children }) => {
+const Lobby: FC = () => {
+  useInitLobby();
   return (
     <group>
       <Floor />
@@ -51,7 +53,8 @@ const Lobby: FC<Props> = ({ children }) => {
         rotation={WALL_POSITIONS.LEFT.rotation}
         colour={'pink'}
       />
-      {children}
+      <Player />
+      <Multiplayers />
     </group>
   );
 };

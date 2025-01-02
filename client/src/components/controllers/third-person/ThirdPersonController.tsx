@@ -1,12 +1,14 @@
 import { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
-import { CommonAnimationNames } from '@app/animations';
+
 import { Controls } from '@app/hocs/keyboard';
 import store from '@app/store';
-import { Position } from '@app/store/game';
+
 import { useKeyboardControls } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
 import { Group, Vector3 } from 'three';
+import { Position } from '@app/types/physics';
+import { CharacterCommonAnimationNames } from '@app/types/character';
 
 const speed = 3; // Movement speed
 const rotationSpeed = Math.PI * 0.5; // Rotation speed (radians per second)
@@ -41,7 +43,7 @@ const ThirdPersonController: FC<Props> = ({ children }) => {
 
     let hasMoved = false; // Track if the character has moved
 
-    let anim: CommonAnimationNames = 'idle';
+    let anim: CharacterCommonAnimationNames = 'idle';
 
     // Forward movement (W key)
     if (get().forward) {

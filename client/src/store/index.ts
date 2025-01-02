@@ -1,13 +1,11 @@
 import { observer } from 'mobx-react-lite';
 
-import SocketStore from './socket';
+import LobbyStore from './lobby';
 import PlayerStore from './player';
-import GameStore from './game';
 
 export class RootStore {
-  socket = new SocketStore(this);
   player = new PlayerStore(this);
-  game = new GameStore(this);
+  lobby = new LobbyStore(this);
 }
 
 const store = new RootStore();

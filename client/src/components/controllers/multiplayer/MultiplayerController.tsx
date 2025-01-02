@@ -1,8 +1,7 @@
 import { FC, useMemo } from 'react';
 import { Euler } from 'three';
 import { observer } from 'mobx-react-lite';
-
-import { Character } from '@app/store/game';
+import { Character } from '@app/types/character';
 import AnimatedWoman from '@app/components/characters/animated-woman';
 
 type Props = { character: Character };

@@ -1,11 +1,9 @@
 import { Canvas } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import Keyboard from './hocs/keyboard';
-import RootScene from './components/scenes/root';
-import useInitGame from './hooks/useInitGame';
+import RootScene from './scenes/root';
 
 function App() {
-  useInitGame();
   return (
     <Keyboard>
       <Canvas shadows>

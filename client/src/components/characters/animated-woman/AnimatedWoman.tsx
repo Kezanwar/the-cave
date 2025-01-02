@@ -8,8 +8,9 @@ import React, { FC, memo, useEffect } from 'react';
 import { Euler, useGraph } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { GLTF, SkeletonUtils } from 'three-stdlib';
-import { CommonAnimationNames } from '@app/animations';
+
 import store from '@app/store';
+import { CharacterCommonAnimationNames } from '@app/types/character';
 
 export type ActionName =
   | 'CharacterArmature|Death'
@@ -49,7 +50,7 @@ const commonAnimMap: CommonAnimMap = {
   wave: 'CharacterArmature|Wave'
 };
 
-const animLoop = (anim: CommonAnimationNames) => {
+const animLoop = (anim: CharacterCommonAnimationNames) => {
   switch (anim) {
     case 'idle':
     case 'run':
@@ -63,7 +64,7 @@ const animLoop = (anim: CommonAnimationNames) => {
 };
 
 type CommonAnimMap = {
-  [key in CommonAnimationNames]: ActionName;
+  [key in CharacterCommonAnimationNames]: ActionName;
 };
 
 interface GLTFAction extends THREE.AnimationClip {
@@ -99,7 +100,7 @@ type Props = {
   hairColor: string;
   topColor: string;
   bottomColor: string;
-  anim?: CommonAnimationNames;
+  anim?: CharacterCommonAnimationNames;
   isPlayer: boolean;
 };
 

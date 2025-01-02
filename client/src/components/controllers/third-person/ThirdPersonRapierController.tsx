@@ -6,9 +6,9 @@ import { Vector3, Group, Euler } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { Controls } from '@app/hocs/keyboard';
 import store from '@app/store';
-import { CommonAnimationNames } from '@app/animations';
-import { Position } from '@app/store/game';
 import CharacterCapsule from '../colliders/CharacterCapsule';
+import { CharacterCommonAnimationNames } from '@app/types/character';
+import { Position } from '@app/types/physics';
 
 type Movement = {
   x: number;
@@ -68,7 +68,7 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
 
       const controls = get();
 
-      let anim: CommonAnimationNames = 'idle';
+      let anim: CharacterCommonAnimationNames = 'idle';
       let hasMoved = false;
       let onlyRotate = false;
 

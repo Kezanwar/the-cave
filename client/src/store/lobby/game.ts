@@ -1,25 +1,12 @@
-import { makeObservable, observable, action, computed } from 'mobx';
-import { RootStore } from '@app/store/index';
-import { CommonAnimationNames } from '@app/animations';
-import { MoveCharacterBroadcast } from './socket';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { RootStore } from '..';
+import {
+  Character,
+  MoveCharacterBroadcast,
+  ServerCharactersMap
+} from '@app/types/character';
 
-export type Position = [number, number, number];
-
-export type Character = {
-  id: string;
-  hairColor: string;
-  topColor: string;
-  bottomColor: string;
-  position: [number, number, number];
-  rotate: number;
-  anim: CommonAnimationNames;
-};
-
-export type initCharacters = {
-  [key: string]: Character;
-};
-
-class GameStore {
+class LobbyGame {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -41,7 +28,7 @@ class GameStore {
     return [...this.characters.values()];
   }
 
-  initialize(characters: initCharacters) {
+  initialize(characters: ServerCharactersMap) {
     for (const [key, value] of Object.entries(characters)) {
       if (!(this.rootStore.player.character.id === key)) {
         this.characters.set(key, value);
@@ -67,4 +54,4 @@ class GameStore {
   }
 }
 
-export default GameStore;
+export default LobbyGame;

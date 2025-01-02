@@ -1,4 +1,4 @@
-import { Position } from '@app/store/game';
+import { Position } from '@app/store/lobby';
 import { Vector3 } from '@react-three/fiber';
 import { v4 } from 'uuid';
 
