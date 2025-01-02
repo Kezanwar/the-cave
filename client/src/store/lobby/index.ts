@@ -12,9 +12,13 @@ import LobbyGame from './game';
 
 const lobby = io('http://localhost:3000/lobby');
 
+/**
+ *  handles socket connection for lobby
+ */
 class LobbyStore {
   rootStore: RootStore;
-  game: LobbyGame;
+
+  game: LobbyGame; // actual stateful game logic for lobby
 
   constructor(rootStore: RootStore) {
     makeObservable(this, {});
