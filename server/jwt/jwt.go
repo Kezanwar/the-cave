@@ -12,8 +12,8 @@ var JWT_SECRET = os.Getenv("JWT_SECRET")
 
 func createJWT(key string, value string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		key:       value,
-		"expires": time.Now().AddDate(0, 0, 14),
+		key:   value,
+		"exp": time.Now().AddDate(0, 0, 14),
 	})
 
 	tokenString, err := token.SignedString([]byte(JWT_SECRET))
