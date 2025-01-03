@@ -1,4 +1,4 @@
-import { Position } from '@app/store/lobby';
+import { Position } from '@app/types/physics';
 import { CapsuleArgs, CapsuleCollider } from '@react-three/rapier';
 
 const colliderArgs: CapsuleArgs = [0.72, 0.22];
