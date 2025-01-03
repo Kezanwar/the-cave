@@ -10,7 +10,7 @@ import (
 
 var JWT_SECRET = os.Getenv("JWT_SECRET")
 
-func createJWT(key string, value string) (string, error) {
+func Create(key string, value string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		key:   value,
 		"exp": time.Now().AddDate(0, 0, 14),
@@ -26,7 +26,7 @@ func createJWT(key string, value string) (string, error) {
 
 }
 
-func parseToken(token string) (jwt.MapClaims, error) {
+func Parse(token string) (jwt.MapClaims, error) {
 	parsed, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -48,7 +48,7 @@ func parseToken(token string) (jwt.MapClaims, error) {
 
 }
 
-func isExpired(claims jwt.MapClaims) bool {
+func IsExpired(claims jwt.MapClaims) bool {
 	exp, ok := claims["exp"].(float64)
 	if !ok {
 		fmt.Println("token.isExpired: exp cant be found")
