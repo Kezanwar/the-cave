@@ -8,17 +8,14 @@ dev:
 	@go build -o bin/game
 	@./bin/game
 
-# create-redis:
-# 	@docker run -p 6379:6379 --name we-link-redis -d -it redis/redis-stack-server:latest
+create-db: 
+	@bash db.sh
 
-# start-redis: 
-# 	@docker start we-link-redis
+start-db: 
+	@docker start the-cave-db
 
-# stop-redis:
-# 	@docker stop we-link-redis
-
-# redis-cli:
-# 	@docker exec -it we-link-redis redis-cli
+stop-db:
+	@docker stop the-cave-db
 
 test: 
 	@go test -v ./

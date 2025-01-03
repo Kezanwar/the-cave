@@ -2,6 +2,7 @@ package main
 
 import (
 	"TheCave/api"
+	"TheCave/db"
 	socketio "TheCave/socket"
 
 	"log"
@@ -16,6 +17,7 @@ import (
 var PORT = string(":") + os.Getenv("PORT")
 
 func main() {
+	db.Connect()
 	server := mux.NewRouter()
 
 	_api := &api.APIServer{}
@@ -44,6 +46,7 @@ func main() {
 
 	<-exit
 	_socket.Close()
+	db.Close()
 	os.Exit(0)
 
 }
