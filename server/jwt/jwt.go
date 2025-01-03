@@ -1,4 +1,4 @@
-package jwt
+package jwtoken
 
 import (
 	"fmt"
@@ -10,10 +10,20 @@ import (
 
 var JWT_SECRET = os.Getenv("JWT_SECRET")
 
+type KeysMap = struct {
+	Exp string
+	Id  string
+}
+
+var Keys = &KeysMap{
+	Exp: "exp",
+	Id:  "id",
+}
+
 func Create(key string, value string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		key:   value,
-		"exp": time.Now().AddDate(0, 0, 14),
+		key:      value,
+		Keys.Exp: time.Now().AddDate(0, 0, 14),
 	})
 
 	tokenString, err := token.SignedString([]byte(JWT_SECRET))
@@ -49,7 +59,7 @@ func Parse(token string) (jwt.MapClaims, error) {
 }
 
 func IsExpired(claims jwt.MapClaims) bool {
-	exp, ok := claims["exp"].(float64)
+	exp, ok := claims[Keys.Exp].(float64)
 	if !ok {
 		fmt.Println("token.isExpired: exp cant be found")
 		return false
