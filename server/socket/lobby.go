@@ -11,7 +11,7 @@ import (
 	"github.com/zishang520/socket.io/socket"
 )
 
-var session_map = session.NewSession()
+var session_map = session.New()
 
 func LobbySocket(s *Socket, clients ...any) {
 	client := clients[0].(*socket.Socket)

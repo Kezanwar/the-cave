@@ -2,7 +2,7 @@ package session
 
 import "github.com/zishang520/socket.io/socket"
 
-func NewSession() *Session {
+func New() *Session {
 	s := &Session{}
 	/* map[sessionid]characterid */
 	s.session = make(map[string]string)

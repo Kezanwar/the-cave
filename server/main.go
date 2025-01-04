@@ -18,6 +18,8 @@ var PORT = string(":") + os.Getenv("PORT")
 
 func main() {
 	db.Connect()
+	db.MigrateUp()
+
 	server := mux.NewRouter()
 
 	_api := &api.APIServer{}
