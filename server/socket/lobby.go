@@ -2,7 +2,7 @@ package socketio
 
 import (
 	"TheCave/game/entities"
-	"TheCave/game/lobby"
+	"TheCave/game/rooms/lobby"
 	"TheCave/socket/session"
 
 	"encoding/json"
