@@ -1,4 +1,4 @@
-package socketio
+package session
 
 import "github.com/zishang520/socket.io/socket"
 

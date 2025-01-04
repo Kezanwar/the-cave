@@ -1,8 +1,6 @@
 package socketio
 
-import (
-	"TheCave/physics"
-)
+import "TheCave/game/physics"
 
 type PlayerMoveInput struct {
 	Position physics.Position

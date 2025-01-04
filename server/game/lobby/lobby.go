@@ -1,8 +1,6 @@
 package lobby
 
-import (
-	"TheCave/entities"
-)
+import "TheCave/game/entities"
 
 var Characters = make(map[string]*entities.Character)
 

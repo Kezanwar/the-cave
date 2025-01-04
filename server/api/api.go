@@ -1,6 +1,7 @@
 package api
 
 import (
+	"TheCave/api/middleware"
 	"encoding/json"
 	"fmt"
 
@@ -49,7 +50,7 @@ func (s *APIServer) WriteJson(w http.ResponseWriter, r *http.Request, status int
 
 func (s *APIServer) Router() *mux.Router {
 	router := mux.NewRouter()
-	router.Use(Cors)
+	router.Use(middleware.Cors)
 	router.HandleFunc("/", s.MakeJsonHandler(s.test))
 	return router
 

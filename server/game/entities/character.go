@@ -1,6 +1,6 @@
 package entities
 
-import "TheCave/physics"
+import "TheCave/game/physics"
 
 type Character struct {
 	Id          string           `json:"id"`

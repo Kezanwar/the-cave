@@ -1,15 +1,17 @@
 package socketio
 
 import (
-	"TheCave/entities"
-	"TheCave/lobby"
+	"TheCave/game/entities"
+	"TheCave/game/lobby"
+	"TheCave/socket/session"
+
 	"encoding/json"
 	"fmt"
 
 	"github.com/zishang520/socket.io/socket"
 )
 
-var session = NewSession()
+var session_map = session.NewSession()
 
 func LobbySocket(s *Socket, clients ...any) {
 	client := clients[0].(*socket.Socket)
@@ -32,7 +34,7 @@ func LobbySocket(s *Socket, clients ...any) {
 				fmt.Println("player:join -- unable to unmarshal msg to struct")
 				panic(0)
 			}
-			session.AddSession(client.Id(), char.Id)
+			session_map.AddSession(client.Id(), char.Id)
 			lobby.AddCharacter(char)
 			client.Broadcast().Emit("room:player:join", char)
 		}
@@ -47,9 +49,9 @@ func LobbySocket(s *Socket, clients ...any) {
 	client.On("disconnect", func(msgs ...any) {
 		fmt.Println("disconnect")
 		socketID := client.Id()
-		id := session.GetCharacterID(socketID)
+		id := session_map.GetCharacterID(socketID)
 		if len(id) > 0 {
-			session.RemoveSession(socketID)
+			session_map.RemoveSession(socketID)
 			lobby.RemoveCharacter(id)
 			client.Broadcast().Emit("room:player:leave", id)
 		}
@@ -58,7 +60,7 @@ func LobbySocket(s *Socket, clients ...any) {
 
 	client.On("player:move", func(msgs ...any) {
 		fmt.Println("player:move")
-		id := session.GetCharacterID(client.Id())
+		id := session_map.GetCharacterID(client.Id())
 
 		if len(id) > 0 {
 
