@@ -3,6 +3,7 @@ package main
 import (
 	"TheCave/api"
 	"TheCave/db"
+	_ "TheCave/migrations"
 	socketio "TheCave/socket"
 
 	"log"

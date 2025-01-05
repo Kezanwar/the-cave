@@ -9,10 +9,13 @@ dev:
 	@./bin/game
 
 create-db: 
-	@bash db.sh
+	@bash create-db.sh
 
 start-db: 
 	@docker start the-cave-db
+
+exec-db:
+	@bash exec-db.sh
 
 stop-db:
 	@docker stop the-cave-db
