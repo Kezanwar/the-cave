@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	user "TheCave/models"
+	"TheCave/models/user"
 	"context"
 	"database/sql"
 	"time"
