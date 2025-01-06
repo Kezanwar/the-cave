@@ -48,7 +48,7 @@ func FetchAll() ([]User, error) {
 			&user.UpdatedAt,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("user.fetchAll: failed to scan row: %w", err)
+			return nil, fmt.Errorf("user.FetchAll: failed to scan row: %w", err)
 		}
 
 		all_users = append(all_users, user)
@@ -56,7 +56,7 @@ func FetchAll() ([]User, error) {
 
 	// Check for any errors encountered during iteration
 	if rows.Err() != nil {
-		return nil, fmt.Errorf("user.fetchAll: rows iteration error: %w", rows.Err())
+		return nil, fmt.Errorf("user.FetchAll: rows iteration error: %w", rows.Err())
 	}
 
 	return all_users, nil
