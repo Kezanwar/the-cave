@@ -24,7 +24,7 @@ type Props = {
   children: ReactNode;
 };
 
-const ROTATION_SPEED = degToRad(1.7);
+const ROTATION_SPEED = degToRad(2.2);
 const RUN_SPEED = 8;
 
 const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
