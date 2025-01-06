@@ -4,7 +4,9 @@ import (
 	"TheCave/api"
 	"TheCave/db"
 	_ "TheCave/migrations"
+	"TheCave/models/user"
 	socketio "TheCave/socket"
+	"fmt"
 
 	"log"
 	"net/http"
@@ -22,6 +24,14 @@ func main() {
 	db.MigrateUp()
 
 	server := mux.NewRouter()
+
+	users, err := user.FetchAll()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(users)
 
 	_api := &api.APIServer{}
 	_socket := &socketio.Socket{}

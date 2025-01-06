@@ -9,6 +9,7 @@ import (
 
 type User struct {
 	ID        int       `json:"id"`
+	UUID      string    `json:"uuid"`
 	FirstName string    `json:"first_name"`
 	LastName  string    `json:"last_name"`
 	Email     string    `json:"email"`
@@ -20,7 +21,7 @@ type User struct {
 func FetchAll() ([]User, error) {
 	// Query to fetch all users
 	query :=
-		`SELECT id, first_name, last_name, email, password, created_at, updated_at 
+		`SELECT id, uuid, first_name, last_name, email, password, created_at, updated_at 
 		FROM users`
 
 	rows, err := db.Conn.Query(context.Background(), query)
@@ -38,6 +39,7 @@ func FetchAll() ([]User, error) {
 		var user User
 		err := rows.Scan(
 			&user.ID,
+			&user.UUID,
 			&user.FirstName,
 			&user.LastName,
 			&user.Email,

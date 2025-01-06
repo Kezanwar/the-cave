@@ -2,6 +2,7 @@ package migrations
 
 import (
 	"TheCave/models/user"
+	"TheCave/services/bcrypt"
 	"context"
 	"database/sql"
 	"time"
@@ -10,13 +11,14 @@ import (
 )
 
 func init() {
-	goose.AddMigrationContext(upAddUserTable, downAddUserTable)
+	goose.AddMigrationContext(upCreateUserTable, downCreateUserTable)
 }
 
-func upAddUserTable(ctx context.Context, tx *sql.Tx) error {
+func upCreateUserTable(ctx context.Context, tx *sql.Tx) error {
 	// This code is executed when the migration is applied.
-	query := `CREATE TABLE users (
+	create_table := `CREATE TABLE users (
 		id SERIAL PRIMARY KEY,
+		uuid UUID DEFAULT uuid_generate_v4() UNIQUE,
 		first_name VARCHAR(50),
 		last_name VARCHAR(50),
 		email VARCHAR(120),
@@ -24,7 +26,15 @@ func upAddUserTable(ctx context.Context, tx *sql.Tx) error {
 		created_at TIMESTAMP DEFAULT now(),
 		updated_at TIMESTAMP DEFAULT now()
 	)`
-	_, err := tx.Exec(query)
+	_, err := tx.Exec(create_table)
+
+	if err != nil {
+		return err
+	}
+
+	create_index := `CREATE INDEX idx_users_uuid ON users(uuid)`
+
+	_, err = tx.Exec(create_index)
 
 	if err != nil {
 		return err
@@ -40,28 +50,35 @@ func upAddUserTable(ctx context.Context, tx *sql.Tx) error {
 }
 
 func insertDummyUser(ctx context.Context, tx *sql.Tx) error {
+
+	hashed_password, err := bcrypt.HashPassword("hashed_password")
+
+	if err != nil {
+		return err
+	}
+
 	kez := user.User{
 		FirstName: "Kez",
 		LastName:  "Anwar",
 		Email:     "kezanwar@gmail.com",
-		Password:  "hashed_password", // Replace with an actual hashed password
+		Password:  hashed_password,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 
-	query := `
+	insert_user := `
 		INSERT INTO users 
 		(first_name, last_name, email, password, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6)
 	`
 
-	_, err := tx.ExecContext(ctx, query,
+	_, err = tx.ExecContext(ctx, insert_user,
 		kez.FirstName, kez.LastName, kez.Email, kez.Password, kez.CreatedAt, kez.UpdatedAt,
 	)
 
 	return err
 }
-func downAddUserTable(ctx context.Context, tx *sql.Tx) error {
+func downCreateUserTable(ctx context.Context, tx *sql.Tx) error {
 	// This code is executed when the migration is rolled back.
 	query := `DROP TABLE users`
 	_, err := tx.Exec(query)
