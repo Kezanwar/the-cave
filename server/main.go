@@ -5,8 +5,10 @@ import (
 	"TheCave/db"
 	_ "TheCave/migrations"
 	"TheCave/models/user"
-	socketio "TheCave/socket"
+	"TheCave/socket"
 	"fmt"
+
+	_ "github.com/joho/godotenv/autoload"
 
 	"log"
 	"net/http"
@@ -33,11 +35,10 @@ func main() {
 
 	fmt.Println(users)
 
-	_api := &api.APIServer{}
-	_socket := &socketio.Socket{}
+	server.Handle("/socket.io/", socket.Router())
 
-	server.Handle("/api/", http.StripPrefix("/api", _api.Router()))
-	server.Handle("/socket.io/", _socket.Router())
+	apiRouter := server.PathPrefix("/api").Subrouter()
+	api.RegisterRoutes(apiRouter)
 
 	go http.ListenAndServe(":3000", server)
 
@@ -58,7 +59,7 @@ func main() {
 	}()
 
 	<-exit
-	_socket.Close()
+	socket.Close()
 	db.Close()
 	os.Exit(0)
 

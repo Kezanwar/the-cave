@@ -1,8 +1,6 @@
-package socketio
+package socket
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -10,13 +8,9 @@ import (
 	"github.com/zishang520/socket.io/socket"
 )
 
-var opt = &socket.ServerOptions{}
+var io *socket.Server
 
-type Socket struct {
-	io *socket.Server
-}
-
-func (s *Socket) GetServerOptions() *socket.ServerOptions {
+func GetServerOptions() *socket.ServerOptions {
 	o := socket.DefaultServerOptions()
 	o.SetServeClient(true)
 	// o.SetConnectionStateRecovery(&socket.ConnectionStateRecovery{})
@@ -33,40 +27,19 @@ func (s *Socket) GetServerOptions() *socket.ServerOptions {
 	return o
 }
 
-func (s *Socket) GetJsonFromSocketMsg(msg any) ([]byte, error) {
-	raw, ok := msg.(map[string]interface{})
-	if !ok {
-		fmt.Println("msg is not a map[string]interface{}")
-		return nil, fmt.Errorf("msg is not a map")
-	}
+func Router() http.Handler {
 
-	jsonData, err := json.Marshal(raw)
-	if err != nil {
-		fmt.Println("Error marshaling to JSON:", err)
-		return nil, fmt.Errorf("unable to marshal msg to json")
-	}
+	options := GetServerOptions()
 
-	return jsonData, nil
-}
+	io = socket.NewServer(nil, options)
 
-func (s *Socket) AssertMsgIsMap(msg any) bool {
-	_, ok := msg.(map[string]interface{})
-	return ok
-}
-
-func (s *Socket) Router() http.Handler {
-
-	options := s.GetServerOptions()
-
-	s.io = socket.NewServer(nil, options)
-
-	s.io.Of("/lobby", nil).On("connect", func(clients ...any) {
-		LobbySocket(s, clients...)
+	io.Of("/lobby", nil).On("connect", func(clients ...any) {
+		LobbySocket(clients...)
 	})
 
-	return s.io.ServeHandler(nil)
+	return io.ServeHandler(nil)
 }
 
-func (s *Socket) Close() {
-	s.io.Close(nil)
+func Close() {
+	io.Close(nil)
 }

@@ -1,4 +1,4 @@
-package socketio
+package socket
 
 import (
 	"TheCave/game/entities"
@@ -14,7 +14,7 @@ import (
 
 var session_map = session.New()
 
-func LobbySocket(s *Socket, clients ...any) {
+func LobbySocket(clients ...any) {
 	client := clients[0].(*socket.Socket)
 
 	fmt.Println("Connect")
@@ -22,9 +22,9 @@ func LobbySocket(s *Socket, clients ...any) {
 
 	client.On("player:join", func(msgs ...any) {
 		client.Emit("game:initialize", lobby.Characters)
-		if s.AssertMsgIsMap(msgs[0]) {
+		if AssertMsgIsMap(msgs[0]) {
 			fmt.Println("player:join")
-			jsonData, err := s.GetJsonFromSocketMsg(msgs[0])
+			jsonData, err := GetJsonFromSocketMsg(msgs[0])
 			if err != nil {
 				fmt.Println("player:join -- unable to get json from msg")
 				panic(0)
@@ -66,7 +66,7 @@ func LobbySocket(s *Socket, clients ...any) {
 		if len(id) > 0 {
 
 			go func() {
-				jsonData, err := s.GetJsonFromSocketMsg(msgs[0])
+				jsonData, err := GetJsonFromSocketMsg(msgs[0])
 
 				if err != nil {
 					fmt.Println("player:move -- unable to get json from msg")
