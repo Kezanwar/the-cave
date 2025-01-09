@@ -57,7 +57,7 @@ func insertDummyUser(ctx context.Context, tx *sql.Tx) error {
 		return err
 	}
 
-	kez := user.User{
+	kez := user.Model{
 		FirstName: "Kez",
 		LastName:  "Anwar",
 		Email:     "kezanwar@gmail.com",

@@ -11,13 +11,13 @@ import (
 var JWT_SECRET = os.Getenv("JWT_SECRET")
 
 type KeysMap = struct {
-	Exp string
-	Id  string
+	Exp  string
+	UUID string
 }
 
 var Keys = &KeysMap{
-	Exp: "exp",
-	Id:  "id",
+	Exp:  "exp",
+	UUID: "uuid",
 }
 
 func Create(key string, value string) (string, error) {

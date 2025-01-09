@@ -4,9 +4,7 @@ import (
 	"TheCave/api"
 	"TheCave/db"
 	_ "TheCave/migrations"
-	"TheCave/models/user"
 	"TheCave/socket"
-	"fmt"
 
 	_ "github.com/joho/godotenv/autoload"
 
@@ -26,14 +24,6 @@ func main() {
 	db.MigrateUp()
 
 	server := mux.NewRouter()
-
-	users, err := user.FetchAll()
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(users)
 
 	server.Handle("/socket.io/", socket.Router())
 
