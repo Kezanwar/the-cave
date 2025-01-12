@@ -8,12 +8,12 @@ import (
 )
 
 func GetUserFromCtx(r *http.Request) (*user.Model, error) {
-	user_uuid, ok := r.Context().Value(api_constants.USER_UUID_CTX).(string)
+	usr, ok := r.Context().Value(api_constants.USER_CTX).(*user.Model)
 
 	if !ok {
-		return nil, fmt.Errorf("handlers.GetUserFromContext: cant find uuid in r.Context")
+		return nil, fmt.Errorf("handlers.GetUserFromContext: cant find user in r.Context")
 	}
 
-	return nil, nil
+	return usr, nil
 
 }

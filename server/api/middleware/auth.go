@@ -3,6 +3,7 @@ package middleware
 import (
 	api_constants "TheCave/api/constants"
 	"TheCave/api/output"
+	"TheCave/models/user"
 	"TheCave/services/jwt"
 	"TheCave/services/uuid"
 	"context"
@@ -35,7 +36,21 @@ func Auth(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), api_constants.USER_UUID_CTX, id)
+		usr, err := user.GetByUUID(r.Context(), id)
+
+		if usr == nil {
+			r.Body.Close()
+			output.WriteJson(w, r, http.StatusForbidden, output.MessageResponse{Message: "Auth failed"})
+			return
+		}
+
+		if err != nil {
+			r.Body.Close()
+			output.WriteJson(w, r, http.StatusForbidden, output.MessageResponse{Message: "Auth error"})
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), api_constants.USER_CTX, usr)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
