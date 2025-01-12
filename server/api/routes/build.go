@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"TheCave/api/handlers"
 	"TheCave/api/middleware"
+	"TheCave/api/output"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -16,11 +16,11 @@ func SubRouter(r *mux.Router, path string, applyRoutes func(r *mux.Router)) {
 func Route(
 	r *mux.Router,
 	path string,
-	handler handlers.ApiHandler,
+	handler output.ApiHandler,
 	middlewares ...middleware.Middleware,
 ) *mux.Route {
 
-	var h http.Handler = handlers.MakeJsonHandler(handler)
+	var h http.Handler = output.MakeJsonHandler(handler)
 
 	if len(middlewares) > 0 {
 		// Wrap it in each middleware in turn

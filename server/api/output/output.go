@@ -1,11 +1,11 @@
-package handlers
+package output
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-type EmptyResponse struct {
+type MessageResponse struct {
 	Message string `json:"message"`
 }
 
@@ -27,7 +27,7 @@ func MakeJsonHandler(f ApiHandler) http.HandlerFunc {
 			if code != NilError {
 				c = code
 			}
-			WriteJson(w, r, c, EmptyResponse{Message: err.Error()})
+			WriteJson(w, r, c, MessageResponse{Message: err.Error()})
 		}
 
 	}
@@ -37,4 +37,8 @@ func WriteJson(w http.ResponseWriter, r *http.Request, status int, v any) error 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(v)
+}
+
+func SuccessResponse(w http.ResponseWriter, r *http.Request, v any) (int, error) {
+	return NilError, WriteJson(w, r, http.StatusOK, v)
 }

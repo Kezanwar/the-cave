@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	api_constants "TheCave/api/constants"
+	"TheCave/api/output"
 	"TheCave/models/user"
 	"TheCave/services/jwt"
 
@@ -67,12 +69,19 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return NilError, WriteJson(w, r, http.StatusOK, &RegisterResp{User: *usr.ToClient(), Token: tkn})
+	return output.SuccessResponse(w, r, &RegisterResp{User: *usr.ToClient(), Token: tkn})
 }
 
 func GetAuthInitialize(w http.ResponseWriter, r *http.Request) (int, error) {
-
 	defer r.Body.Close()
 
-	return NilError, WriteJson(w, r, http.StatusOK, &EmptyResponse{Message: "hello post register"})
+	user_uuid, ok := r.Context().Value(api_constants.USER_UUID_CTX).(string)
+
+	if !ok {
+		return http.StatusBadRequest, fmt.Errorf("Errorrr")
+	}
+
+	fmt.Println(user_uuid)
+
+	return output.SuccessResponse(w, r, &output.MessageResponse{Message: user_uuid})
 }

@@ -88,6 +88,31 @@ func GetByEmail(ctx context.Context, email string) (*Model, error) {
 	return user, nil
 }
 
+func GetByUUID(ctx context.Context, uuid string) (*Model, error) {
+
+	query :=
+		`SELECT id, uuid, first_name, last_name, email, password, created_at, updated_at
+		FROM users
+		WHERE uuid=$1
+		`
+
+	row := db.Conn.QueryRow(ctx, query, uuid)
+
+	user := &Model{}
+
+	err := ScanIntoUser(row, user)
+
+	if err != nil {
+		if db.IsNoRowsError(err) {
+			//no row found, user doesnt exist
+			return nil, nil
+		}
+		return nil, fmt.Errorf("user.GetByUUID: scan failed: %w", err)
+	}
+
+	return user, nil
+}
+
 func FetchAll(ctx context.Context) ([]*Model, error) {
 	// Query to fetch all users
 	query :=
