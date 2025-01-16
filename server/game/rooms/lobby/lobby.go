@@ -2,12 +2,12 @@ package lobby
 
 import "TheCave/game/entities"
 
-var Characters = make(map[string]*entities.Character)
+var Players = make(map[string]*entities.Player)
 
-func AddCharacter(c *entities.Character) {
-	Characters[c.Id] = c
+func AddPlayer(c *entities.Player) {
+	Players[c.Id] = c
 }
 
-func RemoveCharacter(id string) {
-	delete(Characters, id)
+func RemovePlayer(id string) {
+	delete(Players, id)
 }

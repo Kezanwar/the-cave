@@ -18,10 +18,10 @@ func LobbySocket(clients ...any) {
 	client := clients[0].(*socket.Socket)
 
 	fmt.Println("Connect")
-	fmt.Println(lobby.Characters)
+	fmt.Println(lobby.Players)
 
 	client.On("player:join", func(msgs ...any) {
-		client.Emit("game:initialize", lobby.Characters)
+		client.Emit("game:initialize", lobby.Players)
 		if AssertMsgIsMap(msgs[0]) {
 			fmt.Println("player:join")
 			jsonData, err := GetJsonFromSocketMsg(msgs[0])
@@ -29,14 +29,14 @@ func LobbySocket(clients ...any) {
 				fmt.Println("player:join -- unable to get json from msg")
 				panic(0)
 			}
-			char := &entities.Character{}
+			char := &entities.Player{}
 			err = json.Unmarshal(jsonData, char)
 			if err != nil {
 				fmt.Println("player:join -- unable to unmarshal msg to struct")
 				panic(0)
 			}
 			session_map.AddSession(client.Id(), char.Id)
-			lobby.AddCharacter(char)
+			lobby.AddPlayer(char)
 			client.Broadcast().Emit("room:player:join", char)
 		}
 
@@ -44,16 +44,16 @@ func LobbySocket(clients ...any) {
 
 	client.On("player:reinitialize", func(msgs ...any) {
 		fmt.Println("player:reinitialize")
-		client.Emit("game:initialize", lobby.Characters)
+		client.Emit("game:initialize", lobby.Players)
 	})
 
 	client.On("disconnect", func(msgs ...any) {
 		fmt.Println("disconnect")
 		socketID := client.Id()
-		id := session_map.GetCharacterID(socketID)
+		id := session_map.GetPlayerID(socketID)
 		if len(id) > 0 {
 			session_map.RemoveSession(socketID)
-			lobby.RemoveCharacter(id)
+			lobby.RemovePlayer(id)
 			client.Broadcast().Emit("room:player:leave", id)
 		}
 
@@ -61,7 +61,7 @@ func LobbySocket(clients ...any) {
 
 	client.On("player:move", func(msgs ...any) {
 		fmt.Println("player:move")
-		id := session_map.GetCharacterID(client.Id())
+		id := session_map.GetPlayerID(client.Id())
 
 		if len(id) > 0 {
 
@@ -80,15 +80,15 @@ func LobbySocket(clients ...any) {
 					fmt.Println("player:move -- unable to unmarshal msg to struct")
 					panic(0)
 				}
-				lobby.Characters[id].Position = input.Position
-				lobby.Characters[id].Anim = input.Anim
-				lobby.Characters[id].Rotate = input.Rotate
+				lobby.Players[id].Position = input.Position
+				lobby.Players[id].Anim = input.Anim
+				lobby.Players[id].Rotate = input.Rotate
 
 				client.Broadcast().Emit("room:player:move", &PlayerMoveBroadcast{
-					Id:       lobby.Characters[id].Id,
-					Position: lobby.Characters[id].Position,
-					Rotate:   lobby.Characters[id].Rotate,
-					Anim:     lobby.Characters[id].Anim})
+					Id:       lobby.Players[id].Id,
+					Position: lobby.Players[id].Position,
+					Rotate:   lobby.Players[id].Rotate,
+					Anim:     lobby.Players[id].Anim})
 			}()
 
 		}

@@ -4,7 +4,7 @@ import "github.com/zishang520/socket.io/socket"
 
 func New() *Session {
 	s := &Session{}
-	/* map[sessionid]characterid */
+	/* map[sessionid]player_uuid */
 	s.session = make(map[string]string)
 	return s
 }
@@ -21,6 +21,6 @@ func (s *Session) RemoveSession(sessionid socket.SocketId) {
 	delete(s.session, string(sessionid))
 }
 
-func (s *Session) GetCharacterID(sessionid socket.SocketId) string {
+func (s *Session) GetPlayerID(sessionid socket.SocketId) string {
 	return s.session[string(sessionid)]
 }
