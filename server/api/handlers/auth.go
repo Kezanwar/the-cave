@@ -10,6 +10,11 @@ import (
 	"net/http"
 )
 
+type AuthenticateResp struct {
+	User  user.ToClient `json:"user"`
+	Token string        `json:"token"`
+}
+
 type RegisterReqBody struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -24,12 +29,7 @@ func (s *RegisterReqBody) validate() error {
 	return nil
 }
 
-type RegisterResp struct {
-	User  user.ToClient `json:"user"`
-	Token string        `json:"token"`
-}
-
-func PostAuthRegister(w http.ResponseWriter, r *http.Request) (int, error) {
+func Post_Auth_Register(w http.ResponseWriter, r *http.Request) (int, error) {
 	defer r.Body.Close()
 
 	req := &RegisterReqBody{}
@@ -68,10 +68,57 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &RegisterResp{User: *usr.ToClient(), Token: tkn})
+	return output.SuccessResponse(w, r, &AuthenticateResp{User: *usr.ToClient(), Token: tkn})
 }
 
-func GetAuthInitialize(w http.ResponseWriter, r *http.Request) (int, error) {
+type SignInReqBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (s *SignInReqBody) validate() error {
+	if !StrNotNil(s.Email) || !StrNotNil(s.Password) {
+		return fmt.Errorf("request body invalid")
+	}
+	return nil
+}
+func Post_Auth_SignIn(w http.ResponseWriter, r *http.Request) (int, error) {
+	defer r.Body.Close()
+
+	req := &SignInReqBody{}
+
+	err := json.NewDecoder(r.Body).Decode(req)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	err = req.validate()
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	usr, err := user.GetByEmail(r.Context(), req.Email)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	if !usr.IsPassword(req.Password) {
+		return http.StatusBadRequest, fmt.Errorf("incorrect password")
+	}
+
+	tkn, err := jwt.Create(jwt.Keys.UUID, usr.UUID)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	return output.SuccessResponse(w, r, &AuthenticateResp{User: *usr.ToClient(), Token: tkn})
+}
+
+func Get_Auth_Initialize(w http.ResponseWriter, r *http.Request) (int, error) {
 	defer r.Body.Close()
 
 	usr, err := GetUserFromCtx(r)

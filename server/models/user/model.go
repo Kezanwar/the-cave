@@ -1,6 +1,9 @@
 package user
 
-import "time"
+import (
+	"TheCave/services/bcrypt"
+	"time"
+)
 
 //     `CREATE TABLE users (
 // 		id SERIAL PRIMARY KEY,
@@ -34,4 +37,8 @@ type ToClient struct {
 
 func (m *Model) ToClient() *ToClient {
 	return &ToClient{FirstName: m.FirstName, LastName: m.LastName, Email: m.Email, CreatedAt: m.CreatedAt, UpdatedAt: m.UpdatedAt}
+}
+
+func (m *Model) IsPassword(to_check string) bool {
+	return bcrypt.ValidatePassword(m.Password, to_check)
 }
