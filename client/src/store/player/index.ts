@@ -21,9 +21,9 @@ class PlayerStore {
   character: Character = {
     id: Random.uuid(),
     position: Random.vector3Position(),
-    hairColor: Random.hexColorCode(),
-    bottomColor: Random.hexColorCode(),
-    topColor: Random.hexColorCode(),
+    hair_color: Random.hexColorCode(),
+    top_color: Random.hexColorCode(),
+    bottom_color: Random.hexColorCode(),
     anim: 'idle',
     rotate: 0
   };

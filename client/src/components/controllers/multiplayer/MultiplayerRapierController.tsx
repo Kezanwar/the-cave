@@ -53,9 +53,9 @@ const MultiplayerRapierController: FC<Props> = observer(({ character }) => {
       <group rotation={initialPosAndRotate.rotation} ref={c}>
         <AnimatedWoman
           isPlayer={false}
-          bottomColor={character.bottomColor}
-          hairColor={character.hairColor}
-          topColor={character.topColor}
+          bottomColor={character.bottom_color}
+          hairColor={character.hair_color}
+          topColor={character.top_color}
           anim={character.anim}
         />
       </group>

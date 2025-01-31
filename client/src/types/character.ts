@@ -2,9 +2,9 @@ import { Position } from './physics';
 
 export type Character = {
   id: string;
-  hairColor: string;
-  topColor: string;
-  bottomColor: string;
+  hair_color: string;
+  top_color: string;
+  bottom_color: string;
   position: Position;
   rotate: number;
   anim: CharacterCommonAnimationNames;

@@ -9,9 +9,9 @@ const Player: FC = observer(() => {
     <ThirdPersonRapierController>
       <AnimatedWoman
         isPlayer
-        hairColor={store.player.character.hairColor}
-        topColor={store.player.character.topColor}
-        bottomColor={store.player.character.bottomColor}
+        hairColor={store.player.character.hair_color}
+        topColor={store.player.character.top_color}
+        bottomColor={store.player.character.bottom_color}
         anim={store.player.character.anim}
       />
     </ThirdPersonRapierController>
