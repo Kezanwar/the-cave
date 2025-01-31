@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres
+    container_name: thecave-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: the-cave
+    volumes:
+      - thecave-postgres:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: thecave-pgadmin4
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@thecave.uk
+      PGADMIN_DEFAULT_PASSWORD: thecave
+    volumes:
+      - thecave-pgadmin4:/var/lib/pgadmin
+
+volumes:
+  thecave-postgres:
+  thecave-pgadmin4:

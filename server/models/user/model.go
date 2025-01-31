@@ -5,16 +5,18 @@ import (
 	"time"
 )
 
-//     `CREATE TABLE users (
-// 		id SERIAL PRIMARY KEY,
-// 		uuid UUID DEFAULT uuid_generate_v4() UNIQUE,
-// 		first_name VARCHAR(50),
-// 		last_name VARCHAR(50),
-// 		email VARCHAR(120),
-// 		password VARCHAR(120),
-// 		created_at TIMESTAMP DEFAULT now(),
-// 		updated_at TIMESTAMP DEFAULT now()
-// 	    )`
+/*
+	`CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	uuid UUID DEFAULT uuid_generate_v4() UNIQUE,
+	first_name VARCHAR(50),
+	last_name VARCHAR(50),
+	email VARCHAR(120),
+	password VARCHAR(120),
+	created_at TIMESTAMP DEFAULT now(),
+	updated_at TIMESTAMP DEFAULT now()
+    )`
+*/
 
 type Model struct {
 	ID        int       `json:"id"`
@@ -36,7 +38,13 @@ type ToClient struct {
 }
 
 func (m *Model) ToClient() *ToClient {
-	return &ToClient{FirstName: m.FirstName, LastName: m.LastName, Email: m.Email, CreatedAt: m.CreatedAt, UpdatedAt: m.UpdatedAt}
+	return &ToClient{
+		FirstName: m.FirstName,
+		LastName:  m.LastName,
+		Email:     m.Email,
+		CreatedAt: m.CreatedAt,
+		UpdatedAt: m.UpdatedAt,
+	}
 }
 
 func (m *Model) IsPassword(to_check string) bool {
