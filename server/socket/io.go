@@ -21,15 +21,15 @@ type PlayerMoveBroadcast struct {
 
 func GetJsonFromSocketMsg(msg any) ([]byte, error) {
 	raw, ok := msg.(map[string]interface{})
+
 	if !ok {
-		fmt.Println("msg is not a map[string]interface{}")
-		return nil, fmt.Errorf("msg is not a map")
+		return nil, fmt.Errorf("socket.GetJsonFromSocket: msg is not a map[string]interface{}")
 	}
 
 	jsonData, err := json.Marshal(raw)
+
 	if err != nil {
-		fmt.Println("Error marshaling to JSON:", err)
-		return nil, fmt.Errorf("unable to marshal msg to json")
+		return nil, fmt.Errorf("socket.GetJsonFromSocket: unable to marshal msg to JSON")
 	}
 
 	return jsonData, nil

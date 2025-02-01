@@ -80,7 +80,7 @@ func GetByEmail(ctx context.Context, email string) (*Model, error) {
 	if err != nil {
 		if db.IsNoRowsError(err) {
 			//no row found, user doesnt exist
-			return nil, fmt.Errorf("user with email %s not found", email)
+			return nil, fmt.Errorf("User with email %s not found", email)
 		}
 		return nil, fmt.Errorf("user.DoesEmailExist: scan failed: %w", err)
 	}

@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"TheCave/api/output"
+	"TheCave/models/avatar"
+	"TheCave/services/validate"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -15,8 +17,9 @@ type CreateAvatarReqBody struct {
 }
 
 func (r *CreateAvatarReqBody) validate() error {
-	if !StrNotNil(r.Name) || !StrNotNil(r.HairColor) || !StrNotNil(r.BottomColor) || !StrNotNil(r.TopColor) {
-		return fmt.Errorf("request body invalid")
+
+	if !validate.StrNotEmpty(r.Name, r.HairColor, r.TopColor, r.BottomColor) {
+		return fmt.Errorf("Request body invalid")
 	}
 
 	return nil
@@ -34,6 +37,12 @@ func Post_Avatar_Create(w http.ResponseWriter, r *http.Request) (int, error) {
 	}
 
 	err = req.validate()
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	_, err = avatar.Create(r.Context(), req.Name, req.HairColor, req.TopColor, req.BottomColor)
 
 	if err != nil {
 		return http.StatusBadRequest, err

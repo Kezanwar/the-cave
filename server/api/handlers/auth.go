@@ -4,6 +4,7 @@ import (
 	"TheCave/api/output"
 	"TheCave/models/user"
 	"TheCave/services/jwt"
+	"TheCave/services/validate"
 
 	"encoding/json"
 	"fmt"
@@ -23,9 +24,11 @@ type RegisterReqBody struct {
 }
 
 func (s *RegisterReqBody) validate() error {
-	if !StrNotNil(s.FirstName) || !StrNotNil(s.LastName) || !StrNotNil(s.Email) || !StrNotNil(s.Password) {
-		return fmt.Errorf("request body invalid")
+
+	if !validate.StrNotEmpty(s.FirstName, s.LastName, s.Email, s.Password) {
+		return fmt.Errorf("Request body invalid")
 	}
+
 	return nil
 }
 
@@ -53,7 +56,7 @@ func Post_Auth_Register(w http.ResponseWriter, r *http.Request) (int, error) {
 	}
 
 	if exists {
-		return http.StatusBadRequest, fmt.Errorf("this email already exists")
+		return http.StatusBadRequest, fmt.Errorf("This email already exists")
 	}
 
 	usr, err := user.Create(r.Context(), req.FirstName, req.LastName, req.Email, req.Password)
@@ -77,9 +80,11 @@ type SignInReqBody struct {
 }
 
 func (s *SignInReqBody) validate() error {
-	if !StrNotNil(s.Email) || !StrNotNil(s.Password) {
-		return fmt.Errorf("request body invalid")
+
+	if !validate.StrNotEmpty(s.Email, s.Password) {
+		return fmt.Errorf("Request body invalid")
 	}
+
 	return nil
 }
 func Post_Auth_SignIn(w http.ResponseWriter, r *http.Request) (int, error) {
@@ -106,7 +111,7 @@ func Post_Auth_SignIn(w http.ResponseWriter, r *http.Request) (int, error) {
 	}
 
 	if !usr.IsPassword(req.Password) {
-		return http.StatusBadRequest, fmt.Errorf("incorrect password")
+		return http.StatusBadRequest, fmt.Errorf("Incorrect password")
 	}
 
 	tkn, err := jwt.Create(jwt.Keys.UUID, usr.UUID)
