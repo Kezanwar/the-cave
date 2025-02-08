@@ -13,8 +13,13 @@ func StrNotEmpty(s ...string) bool {
 	return true
 }
 
-var hex_colour_regex = regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
+var hex_colour_regex = regexp.MustCompile(`^#(?:[0-9a-fA-F]{5})$`)
 
-func IsHexColorCode(s string) bool {
-	return hex_colour_regex.MatchString(s)
+func IsHexColorCode(s ...string) bool {
+	for _, v := range s {
+		if !hex_colour_regex.MatchString(v) {
+			return false
+		}
+	}
+	return true
 }

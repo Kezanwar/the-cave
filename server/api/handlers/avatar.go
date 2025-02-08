@@ -9,6 +9,10 @@ import (
 	"net/http"
 )
 
+type GetAvatarSuccessResponse struct {
+	Avatar avatar.ToClient `json:"avatar"`
+}
+
 type CreateAvatarReqBody struct {
 	Name        string `json:"name"`
 	HairColor   string `json:"hair_color"`
@@ -25,12 +29,20 @@ func (r *CreateAvatarReqBody) validate() error {
 	return nil
 }
 
-func Post_Avatar_Create(w http.ResponseWriter, r *http.Request) (int, error) {
+func Post_Avatar(w http.ResponseWriter, r *http.Request) (int, error) {
 	defer r.Body.Close()
+
+	usr, err := GetUserFromCtx(r)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	ctx := r.Context()
 
 	req := &CreateAvatarReqBody{}
 
-	err := json.NewDecoder(r.Body).Decode(req)
+	err = json.NewDecoder(r.Body).Decode(req)
 
 	if err != nil {
 		return http.StatusBadRequest, err
@@ -42,11 +54,52 @@ func Post_Avatar_Create(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	_, err = avatar.Create(r.Context(), req.Name, req.HairColor, req.TopColor, req.BottomColor)
+	av, err := avatar.GetUsersAvatar(ctx, usr.UUID)
+
+	if av != nil {
+		//user has avatar already - cant create a new avatar
+		return http.StatusBadRequest, fmt.Errorf("User already has an existing avatar.")
+	}
 
 	if err != nil {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &output.MessageResponse{Message: "hello get users"})
+	nameExists, err := avatar.DoesAvatarNameExist(ctx, req.Name)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	if nameExists {
+		//an avatar already exists with that name
+		return http.StatusBadRequest, fmt.Errorf("Avatar name already exists.")
+	}
+
+	av, err = avatar.Create(ctx, usr.UUID, req.Name, req.HairColor, req.TopColor, req.BottomColor)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	return output.SuccessResponse(w, r, &GetAvatarSuccessResponse{Avatar: *av.ToClient()})
+}
+
+func Get_Avatar(w http.ResponseWriter, r *http.Request) (int, error) {
+	defer r.Body.Close()
+
+	usr, err := GetUserFromCtx(r)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	av, err := avatar.GetUsersAvatar(r.Context(), usr.UUID)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	return output.SuccessResponse(w, r, &GetAvatarSuccessResponse{Avatar: *av.ToClient()})
+
 }
