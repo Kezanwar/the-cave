@@ -100,6 +100,10 @@ func Get_Avatar(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
+	if av == nil {
+		return http.StatusBadRequest, fmt.Errorf("You haven't made an Avatar yet.")
+	}
+
 	return output.SuccessResponse(w, r, &GetAvatarSuccessResponse{Avatar: *av.ToClient()})
 
 }
