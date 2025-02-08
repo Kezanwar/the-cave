@@ -11,9 +11,12 @@ import (
 	"net/http"
 )
 
-type AuthenticateResp struct {
-	User  user.ToClient `json:"user"`
-	Token string        `json:"token"`
+type ManualAuthResp struct {
+	User  *user.ToClient `json:"user"`
+	Token string         `json:"token"`
+}
+type AutoAuthResp struct {
+	User *user.ToClient `json:"user"`
 }
 
 type RegisterReqBody struct {
@@ -71,7 +74,7 @@ func Post_Auth_Register(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &AuthenticateResp{User: *usr.ToClient(), Token: tkn})
+	return output.SuccessResponse(w, r, &ManualAuthResp{User: usr.ToClient(), Token: tkn})
 }
 
 type SignInReqBody struct {
@@ -120,7 +123,7 @@ func Post_Auth_SignIn(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &AuthenticateResp{User: *usr.ToClient(), Token: tkn})
+	return output.SuccessResponse(w, r, &ManualAuthResp{User: usr.ToClient(), Token: tkn})
 }
 
 func Get_Auth_Initialize(w http.ResponseWriter, r *http.Request) (int, error) {
@@ -132,5 +135,5 @@ func Get_Auth_Initialize(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, usr.ToClient())
+	return output.SuccessResponse(w, r, &AutoAuthResp{User: usr.ToClient()})
 }
