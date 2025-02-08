@@ -28,7 +28,7 @@ const WALL_POSITIONS = {
   }
 };
 
-const Lobby: FC = () => {
+const LobbyRoom: FC = () => {
   useInitLobby();
   return (
     <group>
@@ -59,4 +59,4 @@ const Lobby: FC = () => {
   );
 };
 
-export default Lobby;
+export default LobbyRoom;

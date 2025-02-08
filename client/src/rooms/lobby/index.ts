@@ -1,2 +1,2 @@
-import Lobby from './Lobby';
-export default Lobby;
+import LobbyRoom from './Lobby';
+export default LobbyRoom;

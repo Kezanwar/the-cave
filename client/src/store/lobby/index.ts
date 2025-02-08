@@ -9,8 +9,9 @@ import {
 import { io } from 'socket.io-client';
 import { Position, RotateY } from '@app/types/physics';
 import LobbyGame from './game';
+import { BASE_URL } from '@app/config';
 
-const lobby = io('http://localhost:3000/lobby');
+const lobby = io(`${BASE_URL}/lobby`);
 
 /**
  *  handles socket connection for lobby
