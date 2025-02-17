@@ -8,6 +8,6 @@ import (
 )
 
 func Avatar(r *mux.Router) {
-	Route(r, "/", handlers.Post_Avatar, middleware.Auth).Methods("POST")
+	Route(r, "/", handlers.Post_Avatar, middleware.Auth).Methods("POST", "OPTIONS")
 	Route(r, "/", handlers.Get_Avatar, middleware.Auth).Methods("GET")
 }

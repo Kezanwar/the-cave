@@ -2,23 +2,20 @@ package middleware
 
 import (
 	"net/http"
-
-	"github.com/rs/cors"
 )
 
-var corsOptions = cors.New(cors.Options{
-	AllowedOrigins:   []string{"localhost:5173"},
-	AllowedHeaders:   []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token", "Authorization"},
-	AllowedMethods:   []string{"GET", "PATCH", "POST", "PUT", "OPTIONS", "DELETE"},
-	AllowCredentials: true,
-})
-
 func Cors(next http.Handler) http.Handler {
-	return corsOptions.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-CSRF-Token, x-auth-token")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
-		} else {
-			next.ServeHTTP(w, r)
+			return
 		}
-	}))
+
+		next.ServeHTTP(w, r)
+	})
 }

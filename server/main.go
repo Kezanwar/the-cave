@@ -2,7 +2,9 @@ package main
 
 import (
 	"TheCave/api"
+	"TheCave/api/middleware"
 	"TheCave/db"
+	"TheCave/debug"
 	_ "TheCave/migrations"
 	"TheCave/socket"
 
@@ -24,11 +26,14 @@ func main() {
 	db.MigrateUp()
 
 	server := mux.NewRouter()
+	server.Use(middleware.Cors)
 
 	server.Handle("/socket.io/", socket.Router())
 
 	apiRouter := server.PathPrefix("/api").Subrouter()
 	api.RegisterRoutes(apiRouter)
+
+	debug.LogRoutes(server)
 
 	go http.ListenAndServe(":3000", server)
 

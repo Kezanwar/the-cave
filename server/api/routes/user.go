@@ -7,5 +7,5 @@ import (
 )
 
 func User(r *mux.Router) {
-	Route(r, "/", handlers.GetUsers).Methods("GET")
+	Route(r, "/", handlers.GetUsers).Methods("GET", "OPTIONS")
 }

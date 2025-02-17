@@ -8,7 +8,7 @@ import (
 )
 
 func Auth(r *mux.Router) {
-	Route(r, "/register", handlers.Post_Auth_Register).Methods("POST")
-	Route(r, "/sign-in", handlers.Post_Auth_SignIn).Methods("POST")
-	Route(r, "/initialize", handlers.Get_Auth_Initialize, middleware.Auth).Methods("GET")
+	Route(r, "/register", handlers.Post_Auth_Register).Methods("POST", "OPTIONS")
+	Route(r, "/sign-in", handlers.Post_Auth_SignIn).Methods("POST", "OPTIONS")
+	Route(r, "/initialize", handlers.Get_Auth_Initialize, middleware.Auth).Methods("GET", "OPTIONS")
 }
