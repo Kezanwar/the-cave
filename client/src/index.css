@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.__black-and-white {
+  @apply dark:text-white;
+}
+
 #root {
   width: 100vw;
   height: 100vh;
@@ -9,4 +13,14 @@
 
 body {
   margin: 0;
+  /* font-family: 'Manrope'; */
+  /* font-family: 'DM Sans', serif; */
+  font-family: 'IBM Plex Sans', serif;
+  font-variation-settings: 'wdth' 100;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
 }

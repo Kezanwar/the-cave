@@ -1,5 +1,7 @@
+import AuthGuard from '@app/hocs/auth-guard';
 import HomePage from '@app/pages/home';
 import LobbyPage from '@app/pages/lobby/Lobby';
+import Signin from '@app/pages/sign-in';
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 
@@ -11,10 +13,21 @@ import { useRoutes } from 'react-router-dom';
 const paths = [
   {
     path: '/',
-    element: <HomePage />
+    element: (
+      <AuthGuard>
+        <HomePage />
+      </AuthGuard>
+    )
   },
-  { path: '/lobby', element: <LobbyPage /> }
-  // { path: '/file/:uuid', element: <File /> }
+  {
+    path: '/lobby',
+    element: (
+      <AuthGuard>
+        <LobbyPage />
+      </AuthGuard>
+    )
+  },
+  { path: '/sign-in', element: <Signin /> }
 ];
 
 const Routes: React.FC = () => {

@@ -1,7 +1,7 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import { RootStore } from '@app/store/index';
 import { User } from '@app/types/user';
-import axiosInstance, { clearSession, setSession } from '@app/services/axios';
+import axiosInstance, { clearSession, setSession } from '@app/lib/axios';
 
 type ManualAuthResponse = {
   user: User;
@@ -18,7 +18,11 @@ class AuthStore {
   constructor(rootStore: RootStore) {
     makeObservable(this, {
       user: observable,
-      isInitialized: observable
+      isAuthenticated: computed,
+      isInitialized: observable,
+      initialize: action,
+      signIn: action,
+      register: action
     });
 
     this.rootStore = rootStore;
@@ -26,9 +30,13 @@ class AuthStore {
 
   user: User | undefined;
 
+  get isAuthenticated() {
+    return Boolean(this.user);
+  }
+
   isInitialized = false;
 
-  async initialize() {
+  initialize = async () => {
     try {
       const res = await axiosInstance.get<AutoAuthResponse>('/auth/initialize');
       this.user = res.data.user;
@@ -38,9 +46,9 @@ class AuthStore {
     } finally {
       this.isInitialized = true;
     }
-  }
+  };
 
-  async signIn(email: string, password: string) {
+  signIn = async (email: string, password: string) => {
     try {
       const res = await axiosInstance.post<ManualAuthResponse>(
         '/auth/sign-in',
@@ -52,14 +60,14 @@ class AuthStore {
       this.user = undefined;
       clearSession();
     }
-  }
+  };
 
-  async register(
+  register = async (
     first_name: string,
     last_name: string,
     email: string,
     password: string
-  ) {
+  ) => {
     try {
       const res = await axiosInstance.post<ManualAuthResponse>(
         '/auth/register',
@@ -71,7 +79,7 @@ class AuthStore {
       this.user = undefined;
       clearSession();
     }
-  }
+  };
 }
 
 export default AuthStore;

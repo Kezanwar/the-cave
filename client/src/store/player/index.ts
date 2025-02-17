@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 import { RootStore } from '@app/store/index';
-import Random from '@app/util/random';
+import Random from '@app/lib/random';
 import { Character, CharacterCommonAnimationNames } from '@app/types/character';
 import { Position } from '@app/types/physics';
 

@@ -90,7 +90,6 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
         hasMoved = true;
         anim = 'run';
 
-        // // Rotate if moving forward with A or D
         // Rotate left
         if (controls.left) {
           character.current.rotation.y += ROTATION_SPEED;
