@@ -1,3 +1,4 @@
+import { TLoginForm } from '@app/validation/auth';
 import { makeObservable, observable, action, computed } from 'mobx';
 import { RootStore } from '@app/store/index';
 import { User } from '@app/types/user';
@@ -48,11 +49,11 @@ class AuthStore {
     }
   };
 
-  signIn = async (email: string, password: string) => {
+  signIn = async (form: TLoginForm) => {
     try {
       const res = await axiosInstance.post<ManualAuthResponse>(
         '/auth/sign-in',
-        { email, password }
+        form
       );
       this.user = res.data.user;
       setSession(res.data.token);
