@@ -1,3 +1,4 @@
+import { errorHandler } from '@app/lib/axios';
 import store from '@app/store';
 import { useMemo, useState } from 'react';
 import { ObjectSchema, ValidationError, AnyObject } from 'yup';
@@ -121,8 +122,10 @@ const useValidation = <T extends AnyObject>({
   /**
    * Sets a custom API error message.
    */
-  const setApiError = (value: string) => {
-    setErrors((prev) => ({ ...prev, apiError: value }));
+  const setApiError = (error: unknown) => {
+    errorHandler(error, (obj) => {
+      setErrors((prev) => ({ ...prev, apiError: obj.message }));
+    });
   };
 
   /**

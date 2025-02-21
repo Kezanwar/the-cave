@@ -1,12 +1,14 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 
-type Props = {
-  children: ReactNode;
-};
+type Props = React.HTMLAttributes<HTMLDivElement>;
 
-const DarkPageRoot: FC<Props> = ({ children }) => {
+const DarkPageRoot: FC<Props> = ({ children, className }) => {
   return (
-    <div className="dark bg-black min-h-[100vh] w-[100vw] ">{children}</div>
+    <div
+      className={`dark p-8 bg-black min-h-[100vh] w-[100vw] ${className || ''}`}
+    >
+      {children}
+    </div>
   );
 };
 

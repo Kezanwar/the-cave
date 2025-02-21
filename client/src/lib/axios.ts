@@ -40,3 +40,17 @@ export const clearSession = () => {
 };
 
 export default axiosInstance;
+
+export const errorHandler = (
+  error: unknown,
+  onError: (errorObj: ErrorObject) => void
+): void => {
+  const apiErr = error as ErrorObject;
+  if (typeof error === 'string') {
+    onError({ message: error || genericErrorMsg, statusCode: 500 });
+  } else if (apiErr?.message) {
+    onError(apiErr);
+  } else {
+    onError({ message: genericErrorMsg, statusCode: 500 });
+  }
+};

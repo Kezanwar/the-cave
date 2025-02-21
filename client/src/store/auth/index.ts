@@ -3,15 +3,7 @@ import { makeObservable, observable, action, computed } from 'mobx';
 import { RootStore } from '@app/store/index';
 import { User } from '@app/types/user';
 import axiosInstance, { clearSession, setSession } from '@app/lib/axios';
-
-type ManualAuthResponse = {
-  user: User;
-  token: string;
-};
-
-type AutoAuthResponse = {
-  user: User;
-};
+import { AutoAuthResponse, ManualAuthResponse } from './types';
 
 class AuthStore {
   rootStore: RootStore;
@@ -23,6 +15,7 @@ class AuthStore {
       isInitialized: observable,
       initialize: action,
       signIn: action,
+      clearAuthSession: action,
       register: action
     });
 
@@ -49,18 +42,14 @@ class AuthStore {
     }
   };
 
-  signIn = async (form: TLoginForm) => {
-    try {
-      const res = await axiosInstance.post<ManualAuthResponse>(
-        '/auth/sign-in',
-        form
-      );
-      this.user = res.data.user;
-      setSession(res.data.token);
-    } catch (error) {
-      this.user = undefined;
-      clearSession();
-    }
+  signIn = (data: ManualAuthResponse) => {
+    this.user = data.user;
+    setSession(data.token);
+  };
+
+  clearAuthSession = () => {
+    clearSession();
+    this.user = undefined;
   };
 
   register = async (

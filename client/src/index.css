@@ -14,9 +14,10 @@
 body {
   margin: 0;
   /* font-family: 'Manrope'; */
-  /* font-family: 'DM Sans', serif; */
-  font-family: 'IBM Plex Sans', serif;
-  font-variation-settings: 'wdth' 100;
+  font-family: 'DM Sans', serif;
+  /* font-family: 'IBM Plex Sans', serif;
+   */
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer base {

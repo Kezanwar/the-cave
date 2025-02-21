@@ -11,12 +11,15 @@ import { Input } from '@app/components/ui/input';
 import { Button } from '@app/components/ui/button';
 import { OrDivider } from '@app/components/ui/divider';
 import { LuLogIn } from 'react-icons/lu';
-import { IoCreateOutline } from 'react-icons/io5';
+import { IoCreateOutline, IoTerminal } from 'react-icons/io5';
 import useValidation, { UseValidationProps } from '@app/hooks/use-validation';
 import { TLoginForm, LoginSchema } from '@app/validation/auth';
 
 import store from '@app/store';
 import useToggle from '@app/hooks/use-toggle';
+import axiosInstance, { clearSession } from '@app/lib/axios';
+import { ManualAuthResponse } from '@app/store/auth/types';
+import { Alert, AlertDescription, AlertTitle } from '@app/components/ui/alert';
 
 const validationConfig: UseValidationProps<TLoginForm> = {
   schema: LoginSchema,
@@ -25,7 +28,8 @@ const validationConfig: UseValidationProps<TLoginForm> = {
 };
 
 const Form: FC = () => {
-  const { validationErrors, validate, clear } = useValidation(validationConfig);
+  const { validationErrors, validate, clear, setApiError } =
+    useValidation(validationConfig);
 
   const [form, setForm] = useState<TLoginForm>({ email: '', password: '' });
 
@@ -42,7 +46,16 @@ const Form: FC = () => {
     setLoadingTrue();
     const isValid = await validate(form);
     if (isValid) {
-      await store.auth.signIn(form);
+      try {
+        const res = await axiosInstance.post<ManualAuthResponse>(
+          '/auth/sign-in',
+          form
+        );
+        store.auth.signIn(res.data);
+      } catch (error) {
+        setApiError(error);
+        store.auth.clearAuthSession();
+      }
     }
     setLoadingFalse();
   };
@@ -67,6 +80,11 @@ const Form: FC = () => {
             placeholder="Password"
             type="password"
           />
+          {validationErrors.apiError && (
+            <Alert variant={'destructive'}>
+              <AlertDescription>{validationErrors.apiError}</AlertDescription>
+            </Alert>
+          )}
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button
