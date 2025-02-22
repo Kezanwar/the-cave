@@ -87,7 +87,8 @@ func LobbySocket(clients ...any) {
 					Id:       id,
 					Position: input.Position,
 					Rotate:   input.Rotate,
-					Anim:     input.Anim})
+					Anim:     input.Anim,
+				})
 			}()
 
 		}
