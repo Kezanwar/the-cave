@@ -1,15 +1,27 @@
 import React, { ReactNode } from 'react';
 
-type Props = { children: ReactNode; variant: 'sm' | 'md' };
-
-const variant_style = {
+const sizes = {
   sm: 'text-[11px]',
   md: 'text-[13px]'
 };
 
-const Subheading: React.FC<Props> = ({ children, variant }) => {
+const variants = {
+  primary: 'text-primary',
+  secondary: 'text-secondary'
+};
+
+type Props = {
+  size: keyof typeof sizes;
+  variant: keyof typeof variants;
+  className?: string;
+  children: ReactNode;
+};
+
+const Subheading: React.FC<Props> = ({ children, variant, size }) => {
   return (
-    <h4 className={`__black-and-white uppercase ${variant_style[variant]}`}>
+    <h4
+      className={`text-primary uppercase ${sizes[size]} ${variants[variant]}`}
+    >
       {children}
     </h4>
   );
