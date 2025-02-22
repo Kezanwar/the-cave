@@ -18,10 +18,10 @@ func LobbySocket(clients ...any) {
 	client := clients[0].(*socket.Socket)
 
 	fmt.Println("Connect")
-	fmt.Println(lobby.Players)
+	fmt.Println(lobby.GetRoom())
 
 	client.On("player:join", func(msgs ...any) {
-		client.Emit("game:initialize", lobby.Players)
+		client.Emit("game:initialize", lobby.GetRoom())
 		if AssertMsgIsMap(msgs[0]) {
 			fmt.Println("player:join")
 			jsonData, err := GetJsonFromSocketMsg(msgs[0])
@@ -44,7 +44,7 @@ func LobbySocket(clients ...any) {
 
 	client.On("player:reinitialize", func(msgs ...any) {
 		fmt.Println("player:reinitialize")
-		client.Emit("game:initialize", lobby.Players)
+		client.Emit("game:initialize", lobby.GetRoom())
 	})
 
 	client.On("disconnect", func(msgs ...any) {
@@ -80,15 +80,14 @@ func LobbySocket(clients ...any) {
 					fmt.Println("player:move -- unable to unmarshal msg to struct")
 					panic(0)
 				}
-				lobby.Players[id].Position = input.Position
-				lobby.Players[id].Anim = input.Anim
-				lobby.Players[id].Rotate = input.Rotate
+
+				lobby.MovePlayer(id, input.Position, input.Rotate, input.Anim)
 
 				client.Broadcast().Emit("room:player:move", &PlayerMoveBroadcast{
-					Id:       lobby.Players[id].Id,
-					Position: lobby.Players[id].Position,
-					Rotate:   lobby.Players[id].Rotate,
-					Anim:     lobby.Players[id].Anim})
+					Id:       id,
+					Position: input.Position,
+					Rotate:   input.Rotate,
+					Anim:     input.Anim})
 			}()
 
 		}
