@@ -1,9 +1,10 @@
-import { TLoginForm } from '@app/validation/auth';
 import { makeObservable, observable, action, computed } from 'mobx';
 import { RootStore } from '@app/store/index';
 import { User } from '@app/types/user';
-import axiosInstance, { clearSession, setSession } from '@app/lib/axios';
-import { AutoAuthResponse, ManualAuthResponse } from './types';
+import { clearSession, setSession } from '@app/lib/axios';
+
+import { getInitialize, ManualAuthResponse } from '@app/api/auth';
+import { Avatar } from '@app/types/avatar';
 
 class AuthStore {
   rootStore: RootStore;
@@ -14,15 +15,16 @@ class AuthStore {
       isAuthenticated: computed,
       isInitialized: observable,
       initialize: action,
-      signIn: action,
-      clearAuthSession: action,
-      register: action
+      authenticate: action,
+      unauthenticate: action
     });
 
     this.rootStore = rootStore;
   }
 
   user: User | undefined;
+
+  avatar: Avatar | undefined;
 
   get isAuthenticated() {
     return Boolean(this.user);
@@ -32,7 +34,7 @@ class AuthStore {
 
   initialize = async () => {
     try {
-      const res = await axiosInstance.get<AutoAuthResponse>('/auth/initialize');
+      const res = await getInitialize();
       this.user = res.data.user;
     } catch (error) {
       this.user = undefined;
@@ -42,33 +44,14 @@ class AuthStore {
     }
   };
 
-  signIn = (data: ManualAuthResponse) => {
+  authenticate = (data: ManualAuthResponse) => {
     this.user = data.user;
     setSession(data.token);
   };
 
-  clearAuthSession = () => {
+  unauthenticate = () => {
     clearSession();
     this.user = undefined;
-  };
-
-  register = async (
-    first_name: string,
-    last_name: string,
-    email: string,
-    password: string
-  ) => {
-    try {
-      const res = await axiosInstance.post<ManualAuthResponse>(
-        '/auth/register',
-        { first_name, last_name, email, password }
-      );
-      this.user = res.data.user;
-      setSession(res.data.token);
-    } catch (error) {
-      this.user = undefined;
-      clearSession();
-    }
   };
 }
 

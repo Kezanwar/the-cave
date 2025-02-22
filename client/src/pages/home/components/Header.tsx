@@ -1,4 +1,4 @@
-import { Card } from '@app/components/ui/card';
+import { Card } from '@app/components/web/ui/card';
 import { observer } from 'mobx-react-lite';
 
 const Header = observer(() => {

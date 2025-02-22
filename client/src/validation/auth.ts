@@ -25,6 +25,8 @@ export const RegisterSchema = object().shape({
     .oneOf([ref('password')], 'Passwords must match')
 });
 
+export type TRegisterForm = InferType<typeof RegisterSchema>;
+
 export const ChangePasswordSchema = object().shape({
   password: string()
     .matches(/[@$!%*#?&]+/, 'Password must have special character')

@@ -1,25 +1,25 @@
 import { makeObservable, observable, action } from 'mobx';
-import { RootStore } from '@app/store/index';
 import Random from '@app/lib/random';
 import { Character, CharacterCommonAnimationNames } from '@app/types/character';
 import { Position } from '@app/types/physics';
+import { EmitMoveFn } from '@app/types/game';
 
 class PlayerStore {
-  rootStore: RootStore;
-
-  constructor(rootStore: RootStore) {
+  emitPlayerMove: EmitMoveFn;
+  constructor(emitPlayerMove: EmitMoveFn) {
     makeObservable(this, {
       character: observable,
       moveTo: action,
       setStaticAnim: action,
-      onStaticAnimationEnd: action
+      onStaticAnimationEnd: action,
+      initCharacter: action
     });
 
-    this.rootStore = rootStore;
+    this.emitPlayerMove = emitPlayerMove;
   }
 
   character: Character = {
-    id: Random.uuid(),
+    uuid: Random.uuid(),
     position: Random.vector3Position(),
     hair_color: Random.hexColorCode(),
     top_color: Random.hexColorCode(),
@@ -27,6 +27,10 @@ class PlayerStore {
     anim: 'idle',
     rotate: 0
   };
+
+  initCharacter(c: Character) {
+    this.character = c;
+  }
 
   setStaticAnim(anim: CharacterCommonAnimationNames) {
     this.isStaticAnim = true;
@@ -42,11 +46,16 @@ class PlayerStore {
   onStaticAnimationEnd() {
     this.character.anim = 'idle';
     this.isStaticAnim = false;
-    this.rootStore.lobby.emitPlayerMove(
+    this.emitPlayerMove(
       this.character.position,
       this.character.rotate,
       this.character.anim
     );
+    // this.rootStore.lobby.emitPlayerMove(
+    //   this.character.position,
+    //   this.character.rotate,
+    //   this.character.anim
+    // );
   }
 
   isStaticAnim = false;
@@ -62,7 +71,8 @@ class PlayerStore {
     if (isLoopedAnim && !this.isStaticAnim) {
       this.character.anim = anim;
     }
-    this.rootStore.lobby.emitPlayerMove(pos, rotate, this.character.anim);
+    this.emitPlayerMove(pos, rotate, this.character.anim);
+    // this.rootStore.lobby.emitPlayerMove(pos, rotate, this.character.anim);
   }
 }
 

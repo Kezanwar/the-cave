@@ -1,7 +1,7 @@
 import { Position } from './physics';
 
 export type Character = {
-  id: string;
+  uuid: string;
   hair_color: string;
   top_color: string;
   bottom_color: string;
@@ -25,7 +25,7 @@ export type ServerCharactersMap = {
 };
 
 export type MoveCharacterBroadcast = {
-  id: string;
+  uuid: string;
   position: Position;
   rotate: number;
   anim: CharacterCommonAnimationNames;

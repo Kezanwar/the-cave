@@ -2,11 +2,11 @@ import { FC, useEffect, useMemo, useRef } from 'react';
 import { Euler, Group } from 'three';
 import { observer } from 'mobx-react-lite';
 
-import AnimatedWoman from '@app/components/characters/animated-woman';
+import AnimatedWoman from '@app/components/3d/characters/animated-woman';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 import CharacterCapsule from '../colliders/CharacterCapsule';
 
-import Nameplate from '@app/components/billboards/nameplate';
+import Nameplate from '@app/components/3d/nameplate';
 import { Character } from '@app/types/character';
 import { Position } from '@app/types/physics';
 

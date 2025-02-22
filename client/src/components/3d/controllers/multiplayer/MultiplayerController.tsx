@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import { Euler } from 'three';
 import { observer } from 'mobx-react-lite';
 import { Character } from '@app/types/character';
-import AnimatedWoman from '@app/components/characters/animated-woman';
+import AnimatedWoman from '@app/components/3d/characters/animated-woman';
 
 type Props = { character: Character };
 

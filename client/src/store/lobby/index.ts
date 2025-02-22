@@ -10,6 +10,8 @@ import { io } from 'socket.io-client';
 import { Position, RotateY } from '@app/types/physics';
 import LobbyGame from './game';
 import { BASE_URL } from '@app/config';
+import { EmitMoveFn } from '@app/types/game';
+import Random from '@app/lib/random';
 
 const lobby = io(`${BASE_URL}/lobby`);
 
@@ -24,7 +26,7 @@ class LobbyStore {
   constructor(rootStore: RootStore) {
     makeObservable(this, {});
     this.rootStore = rootStore;
-    this.game = new LobbyGame(rootStore);
+    this.game = new LobbyGame(this.emitPlayerMove);
   }
 
   onDisconnect = () => {
@@ -57,19 +59,16 @@ class LobbyStore {
     lobby.emit('player:join', char);
   }
 
-  emitPlayerMove(
-    position: Position,
-    rotate: RotateY,
-    anim: CharacterCommonAnimationNames
-  ) {
+  emitPlayerMove: EmitMoveFn = (position, rotate, anim) => {
     lobby.emit('player:move', { position, rotate, anim });
-  }
+  };
 
   emitGameReinitialize = () => {
     lobby.emit('player:reinitialize');
   };
 
   on() {
+    lobby.connect();
     lobby.on('disconnect', this.onDisconnect);
 
     lobby.on('game:initialize', this.onGameInitialize);
@@ -80,10 +79,21 @@ class LobbyStore {
 
     window.addEventListener('focus', this.emitGameReinitialize);
 
-    this.emitPlayerJoin(this.rootStore.player.character);
+    this.game.player.initCharacter({
+      uuid: Random.uuid(),
+      position: Random.vector3Position(),
+      hair_color: Random.hexColorCode(),
+      top_color: Random.hexColorCode(),
+      bottom_color: Random.hexColorCode(),
+      anim: 'idle',
+      rotate: 0
+    });
+
+    this.emitPlayerJoin(this.game.player.character);
   }
 
   off() {
+    lobby.disconnect();
     lobby.off('disconnect', this.onDisconnect);
 
     lobby.off('game:initialize', this.onGameInitialize);

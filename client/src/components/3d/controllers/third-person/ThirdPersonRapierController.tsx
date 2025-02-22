@@ -5,10 +5,11 @@ import { RapierRigidBody, RigidBody, vec3 } from '@react-three/rapier';
 import { Vector3, Group, Euler } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { Controls } from '@app/hocs/keyboard';
-import store from '@app/store';
+
 import CharacterCapsule from '../colliders/CharacterCapsule';
 import { CharacterCommonAnimationNames } from '@app/types/character';
 import { Position } from '@app/types/physics';
+import PlayerStore from '@app/store/common/player';
 
 type Movement = {
   x: number;
@@ -22,12 +23,13 @@ type InitialPosRotate = {
 
 type Props = {
   children: ReactNode;
+  player: PlayerStore;
 };
 
 const ROTATION_SPEED = degToRad(2.2);
 const RUN_SPEED = 8;
 
-const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
+const ThirdPersonRapierController: React.FC<Props> = ({ children, player }) => {
   const rb = useRef<RapierRigidBody>(null);
 
   const character = useRef<Group>(null);
@@ -41,8 +43,8 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
 
   const initialPosAndRotate: InitialPosRotate = useMemo(() => {
     return {
-      position: store.player.character.position,
-      rotation: new Euler(0, store.player.character.rotate, 0)
+      position: player.character.position,
+      rotation: new Euler(0, player.character.rotate, 0)
     };
   }, []);
 
@@ -50,8 +52,8 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
     return sub(
       (state) => state.wave,
       (pressed) => {
-        if (pressed && store.player.character.anim !== 'wave') {
-          store.player.setStaticAnim('wave');
+        if (pressed && player.character.anim !== 'wave') {
+          player.setStaticAnim('wave');
         }
       }
     );
@@ -131,14 +133,14 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
         anim = 'run_right';
       }
 
-      const animChanged = anim !== store.player.character.anim;
+      const animChanged = anim !== player.character.anim;
 
       const rotate = character.current.rotation.y;
 
       if (!hasMoved && onlyRotate) {
         const newPos = vec3(rb.current.translation());
-        store.player.moveTo([newPos.x, newPos.y, newPos.z], rotate, anim, true);
-      } else if (hasMoved || (animChanged && !store.player.isStaticAnim)) {
+        player.moveTo([newPos.x, newPos.y, newPos.z], rotate, anim, true);
+      } else if (hasMoved || (animChanged && !player.isStaticAnim)) {
         // Calculate movement direction based on rotation
         const directionAngle = Math.atan2(movement.x, movement.z);
         const adjustedAngle = directionAngle + rotate;
@@ -150,7 +152,7 @@ const ThirdPersonRapierController: React.FC<Props> = ({ children }) => {
 
         const newPos = vec3(rb.current.translation());
 
-        store.player.moveTo([newPos.x, newPos.y, newPos.z], rotate, anim, true);
+        player.moveTo([newPos.x, newPos.y, newPos.z], rotate, anim, true);
       }
     }
 

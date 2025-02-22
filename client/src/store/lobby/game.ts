@@ -1,15 +1,16 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { RootStore } from '..';
 import {
   Character,
   MoveCharacterBroadcast,
   ServerCharactersMap
 } from '@app/types/character';
+import PlayerStore from '../common/player';
+import { EmitMoveFn } from '@app/types/game';
 
 class LobbyGame {
-  rootStore: RootStore;
+  emitPlayerMove: EmitMoveFn;
 
-  constructor(rootStore: RootStore) {
+  constructor(emitPlayerMove: EmitMoveFn) {
     makeObservable(this, {
       characters: observable,
       displayCharacters: computed,
@@ -18,9 +19,12 @@ class LobbyGame {
       addCharacter: action,
       moveCharacter: action
     });
+    this.emitPlayerMove = emitPlayerMove;
 
-    this.rootStore = rootStore;
+    this.player = new PlayerStore(emitPlayerMove);
   }
+
+  player: PlayerStore;
 
   characters: Map<string, Character> = new Map();
 
@@ -30,14 +34,14 @@ class LobbyGame {
 
   initialize(characters: ServerCharactersMap) {
     for (const [key, value] of Object.entries(characters)) {
-      if (!(this.rootStore.player.character.id === key)) {
+      if (!(this.player.character.uuid === key)) {
         this.characters.set(key, value);
       }
     }
   }
 
   addCharacter(c: Character) {
-    this.characters.set(c.id, c);
+    this.characters.set(c.uuid, c);
   }
 
   removeCharacter(id: string) {
@@ -45,12 +49,16 @@ class LobbyGame {
   }
 
   moveCharacter(data: MoveCharacterBroadcast) {
-    const c = this.characters.get(data.id);
+    const c = this.characters.get(data.uuid);
     if (c) {
       c.position = data.position;
       c.rotate = data.rotate;
       c.anim = data.anim;
     }
+  }
+
+  reset() {
+    this.characters.clear();
   }
 }
 

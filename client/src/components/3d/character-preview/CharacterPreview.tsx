@@ -18,10 +18,10 @@ const CharacterPreview: FC = observer(() => {
           <OrbitControls enableZoom={false} />
           <AnimatedWoman
             isPlayer
-            hairColor={store.player.character.hair_color}
-            topColor={store.player.character.top_color}
-            bottomColor={store.player.character.bottom_color}
-            anim={store.player.character.anim}
+            hairColor={store.lobby.game.player.character.hair_color}
+            topColor={store.lobby.game.player.character.top_color}
+            bottomColor={store.lobby.game.player.character.bottom_color}
+            anim={store.lobby.game.player.character.anim}
           />
         </group>
       </FiberCanvas>

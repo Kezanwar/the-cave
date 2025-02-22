@@ -8,19 +8,17 @@ import {
 } from '@app/components/web/ui/card';
 import { Input } from '@app/components/web/ui/input';
 import { Button } from '@app/components/web/ui/button';
-import { OrDivider } from '@app/components/web/ui/divider';
 import { LuLogIn } from 'react-icons/lu';
-import { IoCreateOutline } from 'react-icons/io5';
 import useValidation, { UseValidationProps } from '@app/hooks/use-validation';
-import { TLoginForm, LoginSchema } from '@app/validation/auth';
+import { TRegisterForm, RegisterSchema } from '@app/validation/auth';
 import store from '@app/store';
 import useToggle from '@app/hooks/use-toggle';
 import { Alert, AlertDescription } from '@app/components/web/ui/alert';
 import Subheading from '@app/components/web/typography/sub-heading';
-import { postSignIn } from '@app/api/auth';
+import { postRegister } from '@app/api/auth';
 
-const validationConfig: UseValidationProps<TLoginForm> = {
-  schema: LoginSchema,
+const validationConfig: UseValidationProps<TRegisterForm> = {
+  schema: RegisterSchema,
   showToast: true,
   toastConfig: { autoHide: true, title: 'Login' }
 };
@@ -29,12 +27,18 @@ const Form: FC = () => {
   const { validationErrors, validate, clear, setApiError } =
     useValidation(validationConfig);
 
-  const [form, setForm] = useState<TLoginForm>({ email: '', password: '' });
+  const [form, setForm] = useState<TRegisterForm>({
+    email: '',
+    password: '',
+    confirm_password: '',
+    first_name: '',
+    last_name: ''
+  });
 
   const [isLoading, setLoadingTrue, setLoadingFalse] = useToggle();
 
   const buildFieldSetter =
-    (key: string): React.ChangeEventHandler<HTMLInputElement> =>
+    (key: keyof TRegisterForm): React.ChangeEventHandler<HTMLInputElement> =>
     (e) => {
       setForm((prev) => ({ ...prev, [key]: e.target.value }));
     };
@@ -45,7 +49,7 @@ const Form: FC = () => {
     const isValid = await validate(form);
     if (isValid) {
       try {
-        const res = await postSignIn(form);
+        const res = await postRegister(form);
         store.auth.authenticate(res.data);
       } catch (error) {
         setApiError(error);
@@ -66,6 +70,18 @@ const Form: FC = () => {
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <CardContent className="flex flex-col gap-2">
           <Input
+            onChange={buildFieldSetter('first_name')}
+            error={validationErrors.email}
+            placeholder="Email"
+            type="email"
+          />
+          <Input
+            onChange={buildFieldSetter('last_name')}
+            error={validationErrors.email}
+            placeholder="Email"
+            type="email"
+          />
+          <Input
             onChange={buildFieldSetter('email')}
             error={validationErrors.email}
             placeholder="Email"
@@ -74,6 +90,12 @@ const Form: FC = () => {
           <Input
             error={validationErrors.password}
             onChange={buildFieldSetter('password')}
+            placeholder="Password"
+            type="password"
+          />
+          <Input
+            error={validationErrors.password}
+            onChange={buildFieldSetter('confirm_password')}
             placeholder="Password"
             type="password"
           />
@@ -91,17 +113,7 @@ const Form: FC = () => {
             variant={'default'}
             className="w-full"
           >
-            Sign In
-          </Button>
-          <OrDivider />
-          <Button
-            type="button"
-            onClick={() => clear('password')}
-            endIcon={<IoCreateOutline size={16} />}
-            variant={'outline'}
-            className="w-full"
-          >
-            Register
+            Submit
           </Button>
         </CardFooter>
       </form>

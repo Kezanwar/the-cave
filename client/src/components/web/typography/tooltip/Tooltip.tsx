@@ -3,7 +3,7 @@ import {
   Tooltip as ShadToolTip,
   TooltipTrigger,
   TooltipContent
-} from '@app/components/ui/tooltip';
+} from '@app/components/web/ui/tooltip';
 import { FC, ReactNode } from 'react';
 
 type Props = { children: ReactNode; content: string };

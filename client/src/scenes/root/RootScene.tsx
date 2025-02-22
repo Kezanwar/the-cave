@@ -16,9 +16,7 @@ const RootScene: FC<Props> = ({ children }) => {
       <Environment preset="sunset" />
       <ambientLight shadow={'#f1f1f'} intensity={1.2} />
       <Suspense>
-        <Physics debug colliders={false}>
-          {children}
-        </Physics>
+        <Physics colliders={false}>{children}</Physics>
       </Suspense>
     </>
   );

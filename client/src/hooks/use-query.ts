@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AxiosResponse } from 'axios';
 import { errorHandler, ErrorObject } from '@app/lib/axios';
 
-interface useQueryProps<T> {
+export const POLLING_INTERVALS = {
+  TEN_SECONDS: 1000 * 10
+};
+
+export interface useQueryProps<T> {
   fetchFn: () => Promise<AxiosResponse<T>>;
+  pollingInterval?: number;
 }
 
 interface useQueryResponse<T> {
@@ -14,13 +19,14 @@ interface useQueryResponse<T> {
 }
 
 const useQuery = <T = any>({
-  fetchFn
+  fetchFn,
+  pollingInterval
 }: useQueryProps<T>): useQueryResponse<T> => {
   const [response, setResponse] = useState<T | null>(null);
   const [error, setError] = useState<ErrorObject | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await fetchFn();
       setResponse(res.data);
@@ -29,19 +35,28 @@ const useQuery = <T = any>({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const refetch = async () => {
+  const refetch = useCallback(async () => {
     try {
       const res = await fetchFn();
       setResponse(res.data);
     } catch (err) {
       errorHandler(err, setError);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
+    let interval: NodeJS.Timer | undefined;
+    if (pollingInterval) {
+      interval = setInterval(refetch, pollingInterval);
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, []);
 
   return { response, error, loading, refetch };
