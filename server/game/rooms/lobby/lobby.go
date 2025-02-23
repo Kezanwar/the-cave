@@ -17,14 +17,13 @@ func getPlayerMutex(uuid string) *sync.Mutex {
 	return m.(*sync.Mutex)
 }
 
-// ✅ Protects the Players map
 func AddPlayer(c *entities.Player) {
 	players_mutex.Lock()
 	Players[c.UUID] = c
 	players_mutex.Unlock()
 }
 
-// ✅ Protects the Players map
+// Protects the Players map
 func RemovePlayer(uuid string) {
 	players_mutex.Lock()
 	delete(Players, uuid)
@@ -32,7 +31,6 @@ func RemovePlayer(uuid string) {
 	player_mutex_map.Delete(uuid) // Cleanup mutex when player is removed
 }
 
-// ✅ Per-player lock (Does NOT block global reads)
 func MovePlayer(uuid string, position physics.Position, rotate physics.RotateY, anim string) {
 	pmu := getPlayerMutex(uuid) // Get player's own mutex
 	pmu.Lock()
@@ -49,7 +47,6 @@ func MovePlayer(uuid string, position physics.Position, rotate physics.RotateY, 
 	}
 }
 
-// ✅ Safe read for the total number of players
 func GetTotalPlayers() int {
 	players_mutex.RLock()
 	defer players_mutex.RUnlock()
