@@ -21,6 +21,6 @@ func (s *Session) RemoveSession(sessionid socket.SocketId) {
 	delete(s.session, string(sessionid))
 }
 
-func (s *Session) GetPlayerID(sessionid socket.SocketId) string {
+func (s *Session) GetPlayerUUID(sessionid socket.SocketId) string {
 	return s.session[string(sessionid)]
 }

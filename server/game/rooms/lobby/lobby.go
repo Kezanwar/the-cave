@@ -12,34 +12,34 @@ var (
 	player_mutex_map sync.Map     // Per-player locks
 )
 
-func getPlayerMutex(id string) *sync.Mutex {
-	m, _ := player_mutex_map.LoadOrStore(id, &sync.Mutex{})
+func getPlayerMutex(uuid string) *sync.Mutex {
+	m, _ := player_mutex_map.LoadOrStore(uuid, &sync.Mutex{})
 	return m.(*sync.Mutex)
 }
 
 // ✅ Protects the Players map
 func AddPlayer(c *entities.Player) {
 	players_mutex.Lock()
-	Players[c.Id] = c
+	Players[c.UUID] = c
 	players_mutex.Unlock()
 }
 
 // ✅ Protects the Players map
-func RemovePlayer(id string) {
+func RemovePlayer(uuid string) {
 	players_mutex.Lock()
-	delete(Players, id)
+	delete(Players, uuid)
 	players_mutex.Unlock()
-	player_mutex_map.Delete(id) // Cleanup mutex when player is removed
+	player_mutex_map.Delete(uuid) // Cleanup mutex when player is removed
 }
 
 // ✅ Per-player lock (Does NOT block global reads)
-func MovePlayer(id string, position physics.Position, rotate physics.RotateY, anim string) {
-	pmu := getPlayerMutex(id) // Get player's own mutex
+func MovePlayer(uuid string, position physics.Position, rotate physics.RotateY, anim string) {
+	pmu := getPlayerMutex(uuid) // Get player's own mutex
 	pmu.Lock()
 	defer pmu.Unlock()
 
 	players_mutex.RLock() // Read lock to safely access Players map
-	player, exists := Players[id]
+	player, exists := Players[uuid]
 	players_mutex.RUnlock()
 
 	if exists {

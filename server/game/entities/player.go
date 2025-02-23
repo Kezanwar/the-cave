@@ -3,7 +3,7 @@ package entities
 import "TheCave/game/physics"
 
 type Player struct {
-	Id          string           `json:"id"`
+	UUID        string           `json:"uuid"`
 	HairColor   string           `json:"hair_color"`
 	TopColor    string           `json:"top_color"`
 	BottomColor string           `json:"bottom_color"`

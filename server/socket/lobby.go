@@ -30,12 +30,14 @@ func LobbySocket(clients ...any) {
 				panic(0)
 			}
 			char := &entities.Player{}
+
 			err = json.Unmarshal(jsonData, char)
 			if err != nil {
 				fmt.Println("player:join -- unable to unmarshal msg to struct")
 				panic(0)
 			}
-			session_map.AddSession(client.Id(), char.Id)
+
+			session_map.AddSession(client.Id(), char.UUID)
 			lobby.AddPlayer(char)
 			client.Broadcast().Emit("room:player:join", char)
 		}
@@ -50,20 +52,20 @@ func LobbySocket(clients ...any) {
 	client.On("disconnect", func(msgs ...any) {
 		fmt.Println("disconnect")
 		socketID := client.Id()
-		id := session_map.GetPlayerID(socketID)
-		if len(id) > 0 {
+		uuid := session_map.GetPlayerUUID(socketID)
+		if len(uuid) > 0 {
 			session_map.RemoveSession(socketID)
-			lobby.RemovePlayer(id)
-			client.Broadcast().Emit("room:player:leave", id)
+			lobby.RemovePlayer(uuid)
+			client.Broadcast().Emit("room:player:leave", uuid)
 		}
 
 	})
 
 	client.On("player:move", func(msgs ...any) {
 		fmt.Println("player:move")
-		id := session_map.GetPlayerID(client.Id())
+		uuid := session_map.GetPlayerUUID(client.Id())
 
-		if len(id) > 0 {
+		if len(uuid) > 0 {
 
 			go func() {
 				jsonData, err := GetJsonFromSocketMsg(msgs[0])
@@ -81,10 +83,10 @@ func LobbySocket(clients ...any) {
 					panic(0)
 				}
 
-				lobby.MovePlayer(id, input.Position, input.Rotate, input.Anim)
+				lobby.MovePlayer(uuid, input.Position, input.Rotate, input.Anim)
 
 				client.Broadcast().Emit("room:player:move", &PlayerMoveBroadcast{
-					Id:       id,
+					UUID:     uuid,
 					Position: input.Position,
 					Rotate:   input.Rotate,
 					Anim:     input.Anim,

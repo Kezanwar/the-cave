@@ -13,7 +13,7 @@ type PlayerMoveInput struct {
 }
 
 type PlayerMoveBroadcast struct {
-	Id       string           `json:"id"`
+	UUID     string           `json:"uuid"`
 	Position physics.Position `json:"position"`
 	Rotate   physics.RotateY  `json:"rotate"`
 	Anim     string           `json:"anim"`
