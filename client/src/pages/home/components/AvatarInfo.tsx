@@ -26,7 +26,7 @@ const ControlBar: FC = observer(() => {
     <Card className="p-6">
       <div className="flex h-full justify-between items-center">
         <div>
-          <Subheading variant="secondary" size="md">
+          <Subheading variant="secondary" size="sm">
             Your Avatar
           </Subheading>
           <Heading variant="primary" size="sm">

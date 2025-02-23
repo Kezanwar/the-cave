@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, runInAction } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 import Random from '@app/lib/random';
 import { Character, CharacterCommonAnimationNames } from '@app/types/character';
 import { Position } from '@app/types/physics';

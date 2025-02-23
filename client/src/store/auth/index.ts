@@ -13,6 +13,7 @@ class AuthStore {
     makeObservable(this, {
       user: observable,
       isAuthenticated: computed,
+      canJoinGame: computed,
       isInitialized: observable,
       initialize: action,
       authenticate: action,
@@ -24,10 +25,14 @@ class AuthStore {
 
   user: User | undefined;
 
-  avatar: Avatar | undefined;
+  avatar: Avatar | null = null;
 
   get isAuthenticated() {
     return Boolean(this.user);
+  }
+
+  get canJoinGame() {
+    return this.isAuthenticated && Boolean(this.avatar);
   }
 
   isInitialized = false;

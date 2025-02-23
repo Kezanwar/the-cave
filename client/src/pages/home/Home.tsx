@@ -15,9 +15,8 @@ const HomePage: FC = observer(() => {
     <DarkPageRoot className="flex gap-4 flex-col h-[100vh] max-h-[100vh]">
       <Header />
       <div className="flex-1 grid grid-cols-[1fr_33.33%] grid-rows-1 gap-4">
-        <Card className="flex justify-center items-center">
-          <Rooms />
-        </Card>
+        <Rooms />
+
         <AvatarInfo />
       </div>
     </DarkPageRoot>

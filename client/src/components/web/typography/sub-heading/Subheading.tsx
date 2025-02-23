@@ -17,10 +17,15 @@ type Props = {
   children: ReactNode;
 };
 
-const Subheading: React.FC<Props> = ({ children, variant, size }) => {
+const Subheading: React.FC<Props> = ({
+  children,
+  variant,
+  size,
+  className = ''
+}) => {
   return (
     <h4
-      className={`text-primary uppercase ${sizes[size]} ${variants[variant]}`}
+      className={`text-primary uppercase ${sizes[size]} ${variants[variant]} ${className}`}
     >
       {children}
     </h4>
