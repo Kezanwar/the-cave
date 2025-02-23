@@ -1,3 +1,4 @@
+import LoadingScreen from '@app/components/web/loading-screen';
 import store, { observer } from '@app/store';
 import { FC, ReactNode, useEffect } from 'react';
 
@@ -15,7 +16,7 @@ const AuthInitializer: FC<Props> = observer(({ children }) => {
   }, [isInitialized]);
 
   if (!isInitialized) {
-    return 'loading';
+    return <LoadingScreen />;
   }
 
   return children;

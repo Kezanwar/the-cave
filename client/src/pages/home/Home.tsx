@@ -1,12 +1,11 @@
-import store, { observer } from '@app/store';
+import { observer } from '@app/store';
 import { FC } from 'react';
-import SignIn from '../sign-in';
+
 import DarkPageRoot from '@app/components/web/containers/dark-page-root';
 
 import Header from './components/Header';
 import AvatarInfo from './components/AvatarInfo';
 import Rooms from './components/Rooms';
-import { Navigate } from 'react-router';
 
 const HomePage: FC = observer(() => {
   return (

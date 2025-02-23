@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Logo: React.FC = () => {
+type Props = {
+  loading?: boolean;
+};
+
+const Logo: React.FC<Props> = ({ loading }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -16,7 +20,9 @@ const Logo: React.FC = () => {
       fontWeight="none"
       fontSize="none"
       textAnchor="none"
-      className="mix-blend-normal w-80 fill-neutral-200"
+      className={`mix-blend-normal w-80 fill-neutral-200 ${
+        loading ? 'animate-pulse' : ''
+      }`}
     >
       <g>
         <path d="M126.45071,346.78448h20.50527v-15.36268h10.22009v15.36268h20.50527v-51.23063h-20.50527v20.50527h-30.72536zM80.36268,295.55386h-7.68134v5.14259h7.68134zM75.22009,305.83904h-10.22009v5.0775h10.22009zM88.04402,316.05913h-10.22009v5.14259h10.22009zM88.04402,326.27921h-15.36268v5.14259h15.36268zM80.62306,336.5644v5.0775h7.68134v-5.0775zM95.98574,341.64189h-5.14259v5.14259h5.14259zM152.03348,310.91653v-15.36268h-66.52821v5.14259h5.0775v5.14259h-10.22009v5.0775h17.90143v5.14259h2.60384v5.14259h-7.68134v5.0775h7.68134v20.50527h20.44017v-35.86795z"></path>

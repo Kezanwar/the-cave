@@ -1,5 +1,4 @@
-import { Position } from '@app/store/lobby';
-import { Vector3 } from '@react-three/fiber';
+import { Position } from '@app/types/physics';
 import { v4 } from 'uuid';
 
 class Random {
