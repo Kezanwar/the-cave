@@ -12,7 +12,7 @@ class PlayerStore {
       moveTo: action,
       setStaticAnim: action,
       onStaticAnimationEnd: action,
-      initCharacter: action
+      initialize: action
     });
 
     this.emitPlayerMove = emitPlayerMove;
@@ -28,9 +28,8 @@ class PlayerStore {
     rotate: 0
   };
 
-  initCharacter = (c: Character) => {
-    runInAction(() => (this.character.position = Random.vector3Position()));
-    // this.character.position = Random.vector3Position();
+  initialize = () => {
+    this.character.position = Random.vector3Position();
   };
 
   setStaticAnim(anim: CharacterCommonAnimationNames) {

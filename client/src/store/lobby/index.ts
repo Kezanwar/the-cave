@@ -79,15 +79,7 @@ class LobbyStore {
 
     window.addEventListener('focus', this.emitGameReinitialize);
 
-    this.game.player.initCharacter({
-      uuid: Random.uuid(),
-      position: Random.vector3Position(),
-      hair_color: Random.hexColorCode(),
-      top_color: Random.hexColorCode(),
-      bottom_color: Random.hexColorCode(),
-      anim: 'idle',
-      rotate: 0
-    });
+    this.game.player.initialize();
 
     this.emitPlayerJoin(this.game.player.character);
   }
