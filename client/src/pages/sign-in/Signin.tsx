@@ -1,4 +1,4 @@
-import DarkPageRoot from '@app/components/3d/containers/dark-page-root';
+import DarkPageRoot from '@app/components/web/containers/dark-page-root';
 import Logo from '@app/components/web/logo';
 
 import { observer } from 'mobx-react-lite';

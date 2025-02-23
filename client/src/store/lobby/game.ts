@@ -17,12 +17,15 @@ class LobbyGame {
       initialize: action,
       removeCharacter: action,
       addCharacter: action,
-      moveCharacter: action
+      moveCharacter: action,
+      isInitialized: observable
     });
     this.emitPlayerMove = emitPlayerMove;
 
     this.player = new PlayerStore(emitPlayerMove);
   }
+
+  isInitialized = false;
 
   player: PlayerStore;
 
@@ -38,6 +41,7 @@ class LobbyGame {
         this.characters.set(key, value);
       }
     }
+    this.isInitialized = true;
   }
 
   addCharacter(c: Character) {
@@ -50,6 +54,7 @@ class LobbyGame {
 
   moveCharacter(data: MoveCharacterBroadcast) {
     const c = this.characters.get(data.uuid);
+
     if (c) {
       c.position = data.position;
       c.rotate = data.rotate;

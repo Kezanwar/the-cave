@@ -52,7 +52,6 @@ const MultiplayerRapierController: FC<Props> = observer(({ character }) => {
       <Nameplate name={'Zooko'} />
       <group rotation={initialPosAndRotate.rotation} ref={c}>
         <AnimatedWoman
-          isPlayer={false}
           bottomColor={character.bottom_color}
           hairColor={character.hair_color}
           topColor={character.top_color}

@@ -11,6 +11,7 @@ import { GLTF, SkeletonUtils } from 'three-stdlib';
 
 import store from '@app/store';
 import { CharacterCommonAnimationNames } from '@app/types/character';
+import PlayerStore from '@app/store/common/player';
 
 export type ActionName =
   | 'CharacterArmature|Death'
@@ -101,7 +102,7 @@ type Props = {
   topColor: string;
   bottomColor: string;
   anim?: CharacterCommonAnimationNames;
-  isPlayer: boolean;
+  player?: PlayerStore;
 };
 
 const rotations: Euler = [-Math.PI / 2, 0, 0];
@@ -115,7 +116,7 @@ const AnimatedWoman: FC<Props> = memo(
     topColor = 'green',
     bottomColor = 'purple',
     anim,
-    isPlayer
+    player
   }) => {
     const group = React.useRef<THREE.Group>(null);
     const { scene, animations } = useGLTF('/models/Animated Woman.glb');
@@ -125,14 +126,16 @@ const AnimatedWoman: FC<Props> = memo(
 
     useEffect(() => {
       function fn() {
-        store.player.onStaticAnimationEnd();
+        if (player) {
+          player.onStaticAnimationEnd();
+        }
       }
-      if (isPlayer) {
+      if (player) {
         mixer.addEventListener('finished', fn);
       }
 
       return () => {
-        if (isPlayer) {
+        if (player) {
           mixer.removeEventListener('finished', fn);
         }
       };

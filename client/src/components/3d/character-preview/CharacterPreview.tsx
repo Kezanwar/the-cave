@@ -17,7 +17,6 @@ const CharacterPreview: FC = observer(() => {
         <group rotation={ROTATION} scale={2.5} position={POSITION}>
           <OrbitControls enableZoom={false} />
           <AnimatedWoman
-            isPlayer
             hairColor={store.lobby.game.player.character.hair_color}
             topColor={store.lobby.game.player.character.top_color}
             bottomColor={store.lobby.game.player.character.bottom_color}

@@ -9,7 +9,7 @@ const Player: FC = observer(() => {
   return (
     <ThirdPersonRapierController player={store.lobby.game.player}>
       <AnimatedWoman
-        isPlayer
+        player={store.lobby.game.player}
         hairColor={store.lobby.game.player.character.hair_color}
         topColor={store.lobby.game.player.character.top_color}
         bottomColor={store.lobby.game.player.character.bottom_color}

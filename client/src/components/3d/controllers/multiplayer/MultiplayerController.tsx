@@ -14,7 +14,6 @@ const MultiplayerController: FC<Props> = observer(({ character }) => {
   return (
     <group position={character.position} rotation={rotation}>
       <AnimatedWoman
-        isPlayer={false}
         bottomColor={character.bottom_color}
         hairColor={character.hair_color}
         topColor={character.top_color}

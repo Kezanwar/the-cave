@@ -5,7 +5,6 @@ import Wall from './components/Wall';
 import { Euler } from '@react-three/fiber';
 import { Position } from '@app/types/physics';
 
-import useInitLobby from './hooks/useInitLobby';
 import Multiplayers from './components/Multiplayers';
 import Player from './components/Player';
 
@@ -29,7 +28,6 @@ const WALL_POSITIONS = {
 };
 
 const LobbyRoom: FC = () => {
-  useInitLobby();
   return (
     <group>
       <Floor />

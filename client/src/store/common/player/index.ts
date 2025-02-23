@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, runInAction } from 'mobx';
 import Random from '@app/lib/random';
 import { Character, CharacterCommonAnimationNames } from '@app/types/character';
 import { Position } from '@app/types/physics';
@@ -28,9 +28,10 @@ class PlayerStore {
     rotate: 0
   };
 
-  initCharacter(c: Character) {
-    this.character = c;
-  }
+  initCharacter = (c: Character) => {
+    runInAction(() => (this.character.position = Random.vector3Position()));
+    // this.character.position = Random.vector3Position();
+  };
 
   setStaticAnim(anim: CharacterCommonAnimationNames) {
     this.isStaticAnim = true;

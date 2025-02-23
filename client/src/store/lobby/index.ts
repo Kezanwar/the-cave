@@ -1,4 +1,4 @@
-import { makeObservable } from 'mobx';
+import { makeObservable, toJS } from 'mobx';
 import { RootStore } from '@app/store/index';
 import {
   Character,

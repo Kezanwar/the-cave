@@ -1,7 +1,7 @@
 import store, { observer } from '@app/store';
 import { FC } from 'react';
 import SignIn from '../sign-in';
-import DarkPageRoot from '@app/components/3d/containers/dark-page-root';
+import DarkPageRoot from '@app/components/web/containers/dark-page-root';
 import { Card } from '@app/components/web/ui/card';
 import Header from './components/Header';
 import AvatarInfo from './components/AvatarInfo';

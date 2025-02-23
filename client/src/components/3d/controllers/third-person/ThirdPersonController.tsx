@@ -9,16 +9,17 @@ import { useFrame } from '@react-three/fiber';
 import { Group, Vector3 } from 'three';
 import { Position } from '@app/types/physics';
 import { CharacterCommonAnimationNames } from '@app/types/character';
+import PlayerStore from '@app/store/common/player';
 
 const speed = 3; // Movement speed
 const rotationSpeed = Math.PI * 0.5; // Rotation speed (radians per second)
 const delta = 1 / 60; // Approximate frame delta for consistent behavior
 
-type Props = { children?: ReactNode };
+type Props = { children?: ReactNode; player: PlayerStore };
 
-const ThirdPersonController: FC<Props> = ({ children }) => {
+const ThirdPersonController: FC<Props> = ({ children, player }) => {
   const startPos: Position = useMemo(() => {
-    return [...store.player.character.position];
+    return [...player.character.position];
   }, []);
 
   const ref = useRef<Group>(null);
@@ -29,8 +30,8 @@ const ThirdPersonController: FC<Props> = ({ children }) => {
     return sub(
       (state) => state.wave,
       (pressed) => {
-        if (pressed && store.player.character.anim !== 'wave') {
-          store.player.setStaticAnim('wave');
+        if (pressed && player.character.anim !== 'wave') {
+          player.setStaticAnim('wave');
         }
       }
     );
@@ -87,7 +88,7 @@ const ThirdPersonController: FC<Props> = ({ children }) => {
       anim = 'run_back';
     }
 
-    const animChanged = anim !== store.player.character.anim;
+    const animChanged = anim !== player.character.anim;
 
     if (get().left && !get().forward && !get().back) {
       ref.current.position.x -=
@@ -118,7 +119,7 @@ const ThirdPersonController: FC<Props> = ({ children }) => {
       hasMoved = true;
     }
 
-    if (hasMoved || (animChanged && !store.player.isStaticAnim)) {
+    if (hasMoved || (animChanged && !player.isStaticAnim)) {
       const newPos = ref.current.position.toArray() as Position;
       const newRotate = ref.current.rotation.y;
 
@@ -127,16 +128,15 @@ const ThirdPersonController: FC<Props> = ({ children }) => {
       let positionChanged = false;
 
       positionChanged = newPos.some(
-        (val, i) => Math.abs(val - store.player.character.position[i]) > 0.01
+        (val, i) => Math.abs(val - player.character.position[i]) > 0.01
       );
 
       let rotationChanged = false;
 
-      rotationChanged =
-        Math.abs(newRotate - store.player.character.rotate) > 0.01;
+      rotationChanged = Math.abs(newRotate - player.character.rotate) > 0.01;
 
       if (positionChanged || rotationChanged || animChanged) {
-        store.player.moveTo(newPos, newRotate, anim, true);
+        player.moveTo(newPos, newRotate, anim, true);
       }
 
       // firstRender.current = false;
