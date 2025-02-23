@@ -27,9 +27,9 @@ const Rooms: FC = () => {
 
   return (
     <Card className="py-6 flex flex-col ">
-      <Heading variant="primary" size="md" className="text-center">
+      {/* <Heading variant="primary" size="md" className="text-center">
         Rooms
-      </Heading>
+      </Heading> */}
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
         <Room
           isLoading={loading}

@@ -18,6 +18,7 @@ import useToggle from '@app/hooks/use-toggle';
 import { Alert, AlertDescription } from '@app/components/web/ui/alert';
 import Subheading from '@app/components/web/typography/sub-heading';
 import { postSignIn } from '@app/api/auth';
+import { useLocation, useNavigate } from 'react-router';
 
 const validationConfig: UseValidationProps<TLoginForm> = {
   schema: LoginSchema,
@@ -28,6 +29,10 @@ const validationConfig: UseValidationProps<TLoginForm> = {
 const Form: FC = () => {
   const { validationErrors, validate, clear, setApiError } =
     useValidation(validationConfig);
+
+  const nav = useNavigate();
+
+  const { state } = useLocation();
 
   const [form, setForm] = useState<TLoginForm>({ email: '', password: '' });
 
@@ -47,6 +52,7 @@ const Form: FC = () => {
       try {
         const res = await postSignIn(form);
         store.auth.authenticate(res.data);
+        nav(state?.to || '/');
       } catch (error) {
         setApiError(error);
         store.auth.unauthenticate();

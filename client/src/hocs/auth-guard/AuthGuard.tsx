@@ -1,13 +1,18 @@
 import store from '@app/store';
 import { observer } from 'mobx-react-lite';
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode } from 'react';
+import { Navigate } from 'react-router';
 
 type Props = {
   children: ReactNode;
 };
 
 const AuthGuard: FC<Props> = observer(({ children }) => {
-  const authStore = store.auth;
+  if (store.auth.isInitialized && !store.auth.isAuthenticated) {
+    return (
+      <Navigate to={'/sign-in'} state={{ to: window.location.pathname }} />
+    );
+  }
 
   return children;
 });

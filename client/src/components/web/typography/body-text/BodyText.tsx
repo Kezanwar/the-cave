@@ -14,9 +14,7 @@ type Props = {
 const BodyText: React.FC<Props> = ({ className, children, variant }) => {
   return (
     <p
-      className={`${variants[variant]} text-sm  text-neutral-400 leading-5 ${
-        className || ''
-      }`}
+      className={`${variants[variant]} text-sm   leading-5 ${className || ''}`}
     >
       {children}
     </p>

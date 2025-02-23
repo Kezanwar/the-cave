@@ -1,20 +1,25 @@
+import { FC } from 'react';
+import store, { observer } from '@app/store';
+import { LuPen } from 'react-icons/lu';
+
 import CharacterPreview from '@app/components/3d/character-preview/CharacterPreview';
 import Heading from '@app/components/web/typography/heading';
 import Subheading from '@app/components/web/typography/sub-heading';
 import Tooltip from '@app/components/web/typography/tooltip';
 import { Button } from '@app/components/web/ui/button';
 import { Card } from '@app/components/web/ui/card';
-import { LuPen } from 'react-icons/lu';
-import { FC } from 'react';
-import { observer } from 'mobx-react-lite';
+
+import { BodyText } from '@app/components/web/typography/body-text';
 
 const AvatarInfo: FC = observer(() => {
+  const hasAvatar = !!store.auth.avatar;
+
   return (
     <div className="flex flex-col">
       <div className="flex-1">
         <CharacterPreview />
       </div>
-      <ControlBar />
+      {hasAvatar ? <ControlBar /> : <NoAvatar />}
     </div>
   );
 });
@@ -41,6 +46,22 @@ const ControlBar: FC = observer(() => {
           </Tooltip>
         </div>
       </div>
+    </Card>
+  );
+});
+
+const NoAvatar: FC = observer(() => {
+  return (
+    <Card className="p-6 flex justify-center flex-col items-center text-center gap-6">
+      <BodyText variant="primary" className="max-w-[75%]">
+        You haven't created an Avatar yet, you'll need to create one before
+        joining a Game Room.
+      </BodyText>
+      <Tooltip content="Create an Avatar">
+        <Button className="text-orange-500" variant={'icon'} size="icon">
+          <LuPen />
+        </Button>
+      </Tooltip>
     </Card>
   );
 });
