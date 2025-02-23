@@ -29,6 +29,7 @@ type Model struct {
 }
 
 type ToClient struct {
+	UUID        string    `json:"uuid"`
 	Name        string    `json:"name"`
 	HairColor   string    `json:"hair_color"`
 	TopColor    string    `json:"top_color"`
@@ -39,6 +40,7 @@ type ToClient struct {
 
 func (m *Model) ToClient() *ToClient {
 	return &ToClient{
+		UUID:        m.UUID,
 		Name:        m.Name,
 		HairColor:   m.HairColor,
 		TopColor:    m.TopColor,

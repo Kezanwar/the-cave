@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"TheCave/api/output"
+	"TheCave/models/avatar"
 	"TheCave/models/user"
 	"TheCave/services/jwt"
 	"TheCave/services/validate"
@@ -12,11 +13,13 @@ import (
 )
 
 type ManualAuthResp struct {
-	User  *user.ToClient `json:"user"`
-	Token string         `json:"token"`
+	User   *user.ToClient   `json:"user"`
+	Avatar *avatar.ToClient `json:"avatar"`
+	Token  string           `json:"token"`
 }
 type AutoAuthResp struct {
-	User *user.ToClient `json:"user"`
+	User   *user.ToClient   `json:"user"`
+	Avatar *avatar.ToClient `json:"avatar"`
 }
 
 type RegisterReqBody struct {
@@ -74,7 +77,11 @@ func Post_Auth_Register(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &ManualAuthResp{User: usr.ToClient(), Token: tkn})
+	return output.SuccessResponse(w, r, &ManualAuthResp{
+		User:   usr.ToClient(),
+		Avatar: nil,
+		Token:  tkn,
+	})
 }
 
 type SignInReqBody struct {
@@ -123,7 +130,23 @@ func Post_Auth_SignIn(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &ManualAuthResp{User: usr.ToClient(), Token: tkn})
+	av, err := avatar.GetUsersAvatar(r.Context(), usr.UUID)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	var av_resp *avatar.ToClient
+
+	if av != nil {
+		av_resp = av.ToClient()
+	}
+
+	return output.SuccessResponse(w, r, &ManualAuthResp{
+		User:   usr.ToClient(),
+		Avatar: av_resp,
+		Token:  tkn,
+	})
 }
 
 func Get_Auth_Initialize(w http.ResponseWriter, r *http.Request) (int, error) {
@@ -135,5 +158,20 @@ func Get_Auth_Initialize(w http.ResponseWriter, r *http.Request) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	return output.SuccessResponse(w, r, &AutoAuthResp{User: usr.ToClient()})
+	av, err := avatar.GetUsersAvatar(r.Context(), usr.UUID)
+
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	var av_resp *avatar.ToClient
+
+	if av != nil {
+		av_resp = av.ToClient()
+	}
+
+	return output.SuccessResponse(w, r, &AutoAuthResp{
+		User:   usr.ToClient(),
+		Avatar: av_resp,
+	})
 }
