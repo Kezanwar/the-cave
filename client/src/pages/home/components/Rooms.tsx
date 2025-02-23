@@ -16,6 +16,7 @@ import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { LuChevronRight, LuInfo, LuX } from 'react-icons/lu';
 import { useNavigate } from 'react-router';
+import { IoTimeOutline } from 'react-icons/io5';
 
 const roomsMetaQueryConfig: useQueryProps<RoomsMetaResponse> = {
   fetchFn: getRoomMeta,
@@ -31,6 +32,9 @@ const Rooms: FC = () => {
         Rooms
       </Heading> */}
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
+        <Subheading variant="primary" size="md" className="text-center mb-4">
+          Game Rooms
+        </Subheading>
         <Room
           isLoading={loading}
           name="The Lobby"
@@ -90,16 +94,16 @@ const Room: FC<RoomProps> = observer(
       nav(to);
     };
     return (
-      <div className="relative w-[300px] justify-between border border-neutral-800 p-4 rounded-md flex items-center gap-6">
-        <div className="w-[90px]">
-          <Subheading className="w-[90px]" size="sm" variant="primary">
+      <div className="relative w-[320px] justify-between border border-neutral-800 p-4 rounded-md flex items-center gap-6">
+        <div className="w-[110px]">
+          <Subheading className="w-[110px]" size="md" variant="primary">
             {name}
           </Subheading>
-          {comingSoon && (
-            <Subheading className="w-[90px]" size="sm" variant="primary">
+          {/* {comingSoon && (
+            <Subheading className="w-[110px]" size="sm" variant="primary">
               (Coming Soon)
             </Subheading>
-          )}
+          )} */}
         </div>
 
         <div className="flex w-[100px] items-center gap-1">
@@ -126,14 +130,32 @@ const Room: FC<RoomProps> = observer(
             {comingSoon ? <LuX /> : <LuChevronRight />}
           </Button>
         </Tooltip>
-        {comingSoon && <OfflineOverlay />}
+        {comingSoon && <OfflineOverlay comingSoon={comingSoon} />}
       </div>
     );
   }
 );
 
-const OfflineOverlay = () => {
+type OfflineOverlayProps = {
+  comingSoon?: boolean;
+};
+
+const OfflineOverlay: FC<OfflineOverlayProps> = ({ comingSoon }) => {
   return (
-    <div className="absolute top-0 left-0 h-full rounded-md w-full bg-neutral-950/60" />
+    <div className="absolute top-0 left-0 h-full rounded-md w-full bg-neutral-950/60">
+      {comingSoon && (
+        <div className="h-full w-full relative">
+          <div className="absolute -right-28 top-1/2 -translate-y-1/2">
+            <Subheading
+              variant="secondary"
+              className="flex items-center gap-1"
+              size="sm"
+            >
+              <IoTimeOutline /> Coming Soon
+            </Subheading>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

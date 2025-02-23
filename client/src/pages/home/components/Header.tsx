@@ -12,6 +12,7 @@ const Header = observer(() => {
         <a
           className="text-neutral-500 block mt-1"
           href="https://github.com/Kezanwar"
+          target="_blank"
         >
           Built By <span className="underline">Kez Anwar</span>
         </a>
