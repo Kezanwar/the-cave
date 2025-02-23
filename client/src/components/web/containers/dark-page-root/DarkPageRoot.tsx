@@ -14,7 +14,7 @@ const useApplyDarkMode = () => {
 const DarkPageRoot: FC<Props> = ({ children, className }) => {
   useApplyDarkMode();
   return (
-    <div className={`p-8 bg-black min-h-[100vh] w-[100vw] ${className || ''}`}>
+    <div className={`p-8 pmin-h-[100vh] w-[100vw] ${className || ''}`}>
       {children}
     </div>
   );
