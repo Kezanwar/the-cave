@@ -102,21 +102,25 @@ const Room: FC<RoomProps> = observer(
           )}
         </div>
 
-        {isLoading ? (
-          <Spinner show size={'small'} />
-        ) : (
-          <div className="flex w-[100px] items-center gap-1">
-            <OnlineStatus isOnline={!comingSoon} />
-            <Subheading size="sm" variant="secondary">
-              {!comingSoon ? `${playersOnline} Online` : 'Offline'}
-            </Subheading>
-          </div>
-        )}
+        <div className="flex w-[100px] items-center gap-1">
+          {isLoading ? (
+            <Spinner show size={'small'} />
+          ) : (
+            <>
+              <OnlineStatus isOnline={!comingSoon} />
+              <Subheading size="sm" variant="secondary">
+                {!comingSoon ? `${playersOnline} Online` : 'Offline'}
+              </Subheading>
+            </>
+          )}
+        </div>
+
         <Tooltip content={comingSoon ? 'Offline' : `Join ${name}`}>
           <Button
+            disabled={isLoading}
             onClick={onClick}
             className={comingSoon ? 'text-red-500' : 'text-orange-500'}
-            variant="outline"
+            variant={'icon'}
             size={'icon'}
           >
             {comingSoon ? <LuX /> : <LuChevronRight />}

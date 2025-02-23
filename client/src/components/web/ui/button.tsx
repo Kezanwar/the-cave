@@ -10,13 +10,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-fuchsia-900 text-fuchsia-50 shadow hover:bg-fuchsia-900/90 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-800/40 dark:hover:text-neutral-100',
+          'bg-fuchsia-900 text-fuchsia-50 shadow hover:bg-fuchsia-900/90 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-100',
         destructive:
           'bg-red-500 text-neutral-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90',
         outline:
-          'border border-neutral-200 bg-white shadow-sm hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
+          'border border-neutral-200 bg-white shadow-sm hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-900/50 dark:hover:text-neutral-50',
+        icon: 'border border-neutral-200 bg-white shadow-sm hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800/40 dark:hover:text-neutral-50',
         secondary:
-          'bg-neutral-100 text-neutral-800 shadow-sm hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800/80',
+          'bg-neutral-100 text-neutral-800 shadow-sm hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800/90',
         ghost:
           'hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
         link: 'text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50'

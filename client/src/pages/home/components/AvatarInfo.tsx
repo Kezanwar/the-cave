@@ -35,7 +35,7 @@ const ControlBar: FC = observer(() => {
         </div>
         <div className="flex gap-2">
           <Tooltip content="Edit Avatar">
-            <Button className="text-orange-500" variant="outline" size="icon">
+            <Button className="text-orange-500" variant={'icon'} size="icon">
               <LuPen />
             </Button>
           </Tooltip>

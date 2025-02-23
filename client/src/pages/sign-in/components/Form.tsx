@@ -64,7 +64,7 @@ const Form: FC = () => {
         <CardDescription className="mt-1">Please sign in</CardDescription>
       </CardHeader>
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
-        <CardContent className="flex flex-col gap-2">
+        <CardContent className="flex flex-col gap-3">
           <Input
             onChange={buildFieldSetter('email')}
             error={validationErrors.email}
