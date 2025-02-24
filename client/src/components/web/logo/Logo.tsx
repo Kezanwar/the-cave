@@ -20,7 +20,7 @@ const Logo: React.FC<Props> = ({ loading }) => {
       fontWeight="none"
       fontSize="none"
       textAnchor="none"
-      className={`mix-blend-normal w-80 fill-neutral-200 ${
+      className={`mix-blend-normal w-80 fill-stone-200 ${
         loading ? 'animate-pulse' : ''
       }`}
     >

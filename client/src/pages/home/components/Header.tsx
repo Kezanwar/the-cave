@@ -10,11 +10,14 @@ const Header = observer(() => {
       <Subheading size="md" variant="primary">
         The Cave
         <a
-          className="text-neutral-500 block mt-1"
+          className="text-stone-500 block mt-1"
           href="https://github.com/Kezanwar"
           target="_blank"
         >
-          Built By <span className="underline">Kez Anwar</span>
+          BUILT BY{' '}
+          <span className="underline dark:hover:text-stone-100 transition-colors">
+            Kez Anwar
+          </span>
         </a>
       </Subheading>
       <UserAvatar />

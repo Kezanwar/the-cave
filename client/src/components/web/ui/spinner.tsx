@@ -44,7 +44,7 @@ export function Spinner({
   return (
     <span className={spinnerVariants({ show })}>
       <Loader2
-        className={cn(loaderVariants({ size }), className, 'text-neutral-500')}
+        className={cn(loaderVariants({ size }), className, 'text-stone-500')}
       />
       {children}
     </span>

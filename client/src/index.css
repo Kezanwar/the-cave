@@ -4,11 +4,11 @@
 
 @layer text {
   .text-primary {
-    @apply text-black dark:text-neutral-200;
+    @apply text-black dark:text-stone-200;
   }
 
   .text-secondary {
-    @apply text-neutral-700 dark:text-neutral-500;
+    @apply text-stone-700 dark:text-stone-500;
   }
 }
 
