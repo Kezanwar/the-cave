@@ -21,7 +21,7 @@ export type ActionName =
   | 'CharacterArmature|Idle_Gun'
   | 'CharacterArmature|Idle_Gun_Pointing'
   | 'CharacterArmature|Idle_Gun_Shoot'
-  | 'CharacterArmature|Idle_stone'
+  | 'CharacterArmature|Idle_neutral'
   | 'CharacterArmature|Idle_Sword'
   | 'CharacterArmature|Interact'
   | 'CharacterArmature|Kick_Left'

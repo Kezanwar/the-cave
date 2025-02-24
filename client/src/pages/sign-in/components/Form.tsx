@@ -65,7 +65,7 @@ const Form: FC = () => {
     <Card className={'w-[90%] md:w-[400px]'}>
       <CardHeader className="text-center">
         <Subheading variant="primary" size="md">
-          Welcome back!
+          Welcome back
         </Subheading>
         <CardDescription className="mt-1">Please sign in</CardDescription>
       </CardHeader>

@@ -94,7 +94,7 @@ const Room: FC<RoomProps> = observer(
       nav(to);
     };
     return (
-      <div className="relative w-[320px] justify-between border border-stone-800 p-4 rounded-md flex items-center gap-6">
+      <div className="relative w-[320px] justify-between border border-neutral-800 p-4 rounded-md flex items-center gap-6">
         <div className="w-[110px]">
           <Subheading className="w-[110px]" size="md" variant="primary">
             {name}
@@ -142,7 +142,7 @@ type OfflineOverlayProps = {
 
 const OfflineOverlay: FC<OfflineOverlayProps> = ({ comingSoon }) => {
   return (
-    <div className="absolute top-0 left-0 h-full rounded-md w-full bg-stone-950/60">
+    <div className="absolute top-0 left-0 h-full rounded-md w-full bg-neutral-950/60">
       {comingSoon && (
         <div className="h-full w-full relative">
           <div className="absolute -right-28 top-1/2 -translate-y-1/2">
@@ -151,7 +151,7 @@ const OfflineOverlay: FC<OfflineOverlayProps> = ({ comingSoon }) => {
               className="flex items-center gap-1"
               size="sm"
             >
-              <IoTimeOutline size={16} className="text-blue-500" /> Coming Soon
+              <IoTimeOutline size={16} className="text-teal-500" /> Coming Soon
             </Subheading>
           </div>
         </div>
