@@ -82,7 +82,7 @@ const Room: FC<RoomProps> = observer(
         toast(`Unable To Join ${name}`, {
           dismissible: true,
           position: 'bottom-left',
-          icon: <LuInfo className="text-red-500" />,
+          icon: <LuInfo size={16} className="text-red-500" />,
           description: 'You must create an Avatar First',
           action: {
             label: 'Create Avatar',
@@ -151,7 +151,7 @@ const OfflineOverlay: FC<OfflineOverlayProps> = ({ comingSoon }) => {
               className="flex items-center gap-1"
               size="sm"
             >
-              <IoTimeOutline size={16} className="text-teal-500" /> Coming Soon
+              <IoTimeOutline size={16} className="text-blue-500" /> Coming Soon
             </Subheading>
           </div>
         </div>
