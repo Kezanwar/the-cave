@@ -151,7 +151,7 @@ const OfflineOverlay: FC<OfflineOverlayProps> = ({ comingSoon }) => {
               className="flex items-center gap-1"
               size="sm"
             >
-              <IoTimeOutline /> Coming Soon
+              <IoTimeOutline size={16} className="text-blue-500" /> Coming Soon
             </Subheading>
           </div>
         </div>
