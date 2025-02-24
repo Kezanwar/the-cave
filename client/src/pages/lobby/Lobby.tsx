@@ -1,4 +1,3 @@
-import Canvas from '@app/canvas/Canvas';
 import LoadingScreen from '@app/components/web/loading-screen';
 import LobbyRoom from '@app/rooms/lobby';
 import useInitLobby from '@app/rooms/lobby/hooks/useInitLobby';
@@ -12,11 +11,7 @@ const LobbyPage: FC = observer(() => {
     return <LoadingScreen />;
   }
 
-  return (
-    <Canvas>
-      <LobbyRoom />
-    </Canvas>
-  );
+  return <LobbyRoom />;
 });
 
 export default LobbyPage;

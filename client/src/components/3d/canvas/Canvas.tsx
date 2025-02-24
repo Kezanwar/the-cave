@@ -1,8 +1,8 @@
 import Keyboard from '@app/hocs/keyboard';
-import RootScene from '@app/scenes/root';
+import RootScene from '@app/components/3d/scenes/root';
 import { Stats } from '@react-three/drei';
 import { Canvas as FiberCanvas } from '@react-three/fiber';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;

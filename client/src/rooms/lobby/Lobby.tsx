@@ -7,6 +7,7 @@ import { Position } from '@app/types/physics';
 
 import Multiplayers from './components/Multiplayers';
 import Player from './components/Player';
+import Canvas from '@app/components/3d/canvas';
 
 const WALL_POSITIONS = {
   TOP: {
@@ -29,31 +30,33 @@ const WALL_POSITIONS = {
 
 const LobbyRoom: FC = () => {
   return (
-    <group>
-      <Floor />
-      <Wall
-        colour="purple"
-        position={WALL_POSITIONS.TOP.position}
-        rotation={WALL_POSITIONS.TOP.rotation}
-      />
-      <Wall
-        colour={'orange'}
-        position={WALL_POSITIONS.RIGHT.position}
-        rotation={WALL_POSITIONS.RIGHT.rotation}
-      />
-      <Wall
-        colour="cyan"
-        position={WALL_POSITIONS.BOTTOM.position}
-        rotation={WALL_POSITIONS.BOTTOM.rotation}
-      />
-      <Wall
-        position={WALL_POSITIONS.LEFT.position}
-        rotation={WALL_POSITIONS.LEFT.rotation}
-        colour={'pink'}
-      />
-      <Player />
-      <Multiplayers />
-    </group>
+    <Canvas>
+      <group>
+        <Floor />
+        <Wall
+          colour="purple"
+          position={WALL_POSITIONS.TOP.position}
+          rotation={WALL_POSITIONS.TOP.rotation}
+        />
+        <Wall
+          colour={'orange'}
+          position={WALL_POSITIONS.RIGHT.position}
+          rotation={WALL_POSITIONS.RIGHT.rotation}
+        />
+        <Wall
+          colour="cyan"
+          position={WALL_POSITIONS.BOTTOM.position}
+          rotation={WALL_POSITIONS.BOTTOM.rotation}
+        />
+        <Wall
+          position={WALL_POSITIONS.LEFT.position}
+          rotation={WALL_POSITIONS.LEFT.rotation}
+          colour={'pink'}
+        />
+        <Player />
+        <Multiplayers />
+      </group>
+    </Canvas>
   );
 };
 
