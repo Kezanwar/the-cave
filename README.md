@@ -22,6 +22,8 @@ The Cave is an experimental 3D web application built using **React Three Fiber**
 - **React & React Three Fiber** – for managing the 3D scene
 - **Three.js** – for low-level 3D rendering
 - **TypeScript** – for type safety and maintainability
+- **Tailwind** – for styling
+- **ShadCn** – for web components
 - **Vite** – for fast development and bundling
 - **GLSL** – for writing custom shaders
 
