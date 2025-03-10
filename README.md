@@ -92,7 +92,7 @@ Once the client and server are running:
 
 ## 📖 Learning Focus
 
-This project is designed to improve skills in:
+This motivation behind this project is to improve my skills in:
 
 - Understanding **3D math** (vectors, matrices, transformations)
 - Writing **custom GLSL shaders**
