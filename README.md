@@ -4,35 +4,33 @@
 
 ## 🕹️ About The Cave
 
-The Cave is an experimental 3D web application built using **React Three Fiber** and **Three.js**. It serves as a playground for exploring 3D graphics, shaders, and mathematical concepts in WebGL. The project aims to push the boundaries of interactive 3D experiences in the browser.
+The Cave is an experimental 3D web application. It serves as a playground of mini games and chill out areas for me and my mates. It's also a learner project for me to explore **Golang** and **React Three Fiber**.
 
 ## 🚀 Features
 
 - 🌐 **React Three Fiber** for declarative 3D scene management
-- 🎨 **Custom shaders** and material effects
-- 🔢 **Mathematical foundations** applied to 3D rendering
-- 🎮 **Interactive elements** for user engagement
+- ⚡ **Game Server** built with Golang
+- 🎮 **Interactive mini games** for user engagement
 - 🏗️ **Modular architecture** for easy extensibility
-- ⚡ **Backend API** built with Go and PostgreSQL
+- ⚡ **Backend API** built with Golang and PostgreSQL
 
 ## 🛠️ Tech Stack
 
 ### Client
 
-- **React & React Three Fiber** – for managing the 3D scene
+- **React & React Three Fiber** – for managing the 3D scenes
 - **Three.js** – for low-level 3D rendering
 - **TypeScript** – for type safety and maintainability
 - **Tailwind** – for styling
 - **ShadCn** – for web components
 - **Vite** – for fast development and bundling
-- **GLSL** – for writing custom shaders
 
 ### Server
 
-- **Go (Golang)** – for a robust and performant backend
+- **Go (Golang)** – for a robust and performant server & API
 - **PostgreSQL** – for relational database storage
-- **Gin** – for a lightweight web framework
-- **pgx** – for PostgreSQL driver and query builder
+- **Gorilla/mux** – for a lightweight http web framework
+- **pgx** – for PostgreSQL driver and query building
 - **Goose** – for database migrations
 - **Socket.IO** – for real-time communication
 - **Docker** – for managing PostgreSQL and pgAdmin
